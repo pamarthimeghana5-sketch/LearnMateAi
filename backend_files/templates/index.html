@@ -1,0 +1,4806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LearnMateAI</title>
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* ============================================ */
+    /* GLOBAL STYLES */
+    /* ============================================ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: #f2f4f8;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      transition: background 0.3s, color 0.3s;
+      position: relative;
+    }
+
+    body.dark {
+      background: #0b0d15;
+      color: #eef2ff;
+    }
+
+    /* ============================================ */
+    /* PAGE CONTAINER - DASHBOARD */
+    /* ============================================ */
+    .app-container {
+      max-width: 1440px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(18px) saturate(180%);
+      -webkit-backdrop-filter: blur(18px) saturate(180%);
+      border-radius: 3rem;
+      padding: 2rem 2rem 2.5rem;
+      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.5);
+      transition: all 0.3s;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      position: relative;
+    }
+
+    body.dark .app-container {
+      background: rgba(20, 25, 40, 0.55);
+      backdrop-filter: blur(20px) saturate(190%);
+      -webkit-backdrop-filter: blur(20px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    /* ============================================ */
+    /* LOGIN & SIGNUP PAGE STYLES */
+    /* ============================================ */
+    .auth-page {
+      display: none;
+      width: 100%;
+      min-height: 100vh;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #4f46e5, #9333ea, #ec4899);
+      padding: 1.5rem;
+    }
+
+    .auth-page.active {
+      display: flex;
+    }
+
+    .auth-box {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(18px);
+      border-radius: 25px;
+      padding: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    }
+
+    .auth-box .logo {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .auth-box .logo i {
+      font-size: 55px;
+      color: white;
+    }
+
+    .auth-box .logo h2 {
+      margin-top: 10px;
+      font-family: 'Playfair Display', 'Times New Roman', serif;
+      font-size: 1.8rem;
+    }
+
+    .auth-box .logo p {
+      opacity: 0.8;
+      font-size: 0.95rem;
+      margin-top: 4px;
+    }
+
+    .input-box {
+      position: relative;
+      margin: 20px 0;
+    }
+
+    .input-box input {
+      width: 100%;
+      padding: 14px 20px;
+      border: none;
+      outline: none;
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.2);
+      color: #000000;
+      font-size: 16px;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.3s;
+    }
+
+    .input-box input:focus,
+    .input-box input:not(:placeholder-shown) {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .input-box input:-webkit-autofill,
+    .input-box input:-webkit-autofill:hover,
+    .input-box input:-webkit-autofill:focus,
+    .input-box input:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.2) inset !important;
+      -webkit-text-fill-color: #000000 !important;
+      background: rgba(255, 255, 255, 0.2) !important;
+      color: #000000 !important;
+    }
+
+    .input-box input::placeholder {
+      color: rgba(0, 0, 0, 0.5);
+    }
+
+    .input-box .toggle-password {
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.1rem;
+      cursor: pointer;
+      color: rgba(0, 0, 0, 0.6);
+      transition: color 0.2s;
+      z-index: 2;
+    }
+
+    .input-box .toggle-password:hover {
+      color: #000000;
+    }
+
+    .options {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .options a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .options label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .auth-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 50px;
+      background: white;
+      color: #4f46e5;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .auth-btn:hover {
+      background: #4f46e5;
+      color: white;
+    }
+
+    .auth-switch-text {
+      text-align: center;
+      margin-top: 25px;
+      font-size: 0.95rem;
+    }
+
+    .auth-switch-text a {
+      color: white;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .auth-switch-text a:hover {
+      text-decoration: underline;
+    }
+
+    /* ============================================ */
+    /* FEATURE DASHBOARD STYLES */
+    /* ============================================ */
+    .feature-dashboard {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      z-index: 3000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .feature-dashboard.active {
+      display: flex;
+    }
+
+    .feature-dashboard-content {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 30px;
+      max-width: 800px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 40px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+    }
+
+    body.dark .feature-dashboard-content {
+      background: rgba(20, 25, 45, 0.95);
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .feature-dashboard-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 28px;
+      cursor: pointer;
+      color: #4f46e5;
+      transition: 0.3s;
+      background: none;
+      border: none;
+    }
+
+    .feature-dashboard-close:hover {
+      color: #ec4899;
+    }
+
+    .feature-dashboard-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 25px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    body.dark .feature-dashboard-title {
+      color: #eef2ff;
+    }
+
+    .feature-dashboard-title i {
+      color: #4f46e5;
+    }
+
+    .feature-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .feature-action-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #1e293b;
+    }
+
+    body.dark .feature-action-card {
+      border-color: rgba(255, 255, 255, 0.1);
+      color: #eef2ff;
+    }
+
+    .feature-action-card:hover {
+      transform: translateY(-5px);
+      background: rgba(99, 102, 241, 0.1);
+      border-color: #4f46e5;
+      box-shadow: 0 10px 25px rgba(79, 70, 229, 0.15);
+    }
+
+    .feature-action-card i {
+      font-size: 2rem;
+      color: #4f46e5;
+      margin-bottom: 10px;
+    }
+
+    body.dark .feature-action-card i {
+      color: #818cf8;
+    }
+
+    .feature-action-card h4 {
+      font-size: 1rem;
+      margin-bottom: 5px;
+    }
+
+    .feature-action-card p {
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    body.dark .feature-action-card p {
+      color: #94a3b8;
+    }
+
+    /* ============================================ */
+    /* PROFILE MODAL */
+    /* ============================================ */
+    .profile-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .profile-modal.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .profile-modal-content {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 30px;
+      max-width: 550px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 40px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+    }
+
+    body.dark .profile-modal-content {
+      background: rgba(20, 25, 45, 0.95);
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .profile-modal-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 28px;
+      cursor: pointer;
+      color: #4f46e5;
+      transition: 0.3s;
+      background: none;
+      border: none;
+    }
+
+    .profile-modal-close:hover {
+      transform: rotate(90deg);
+      color: #ec4899;
+    }
+
+    .profile-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .profile-avatar-large {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #818cf8, #6366f1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 2.5rem;
+      margin: 0 auto 15px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .profile-avatar-large img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-avatar-large .avatar-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: 0.3s;
+      border-radius: 50%;
+      color: white;
+      font-size: 1.2rem;
+    }
+
+    .profile-avatar-large:hover .avatar-overlay {
+      opacity: 1;
+    }
+
+    body.dark .profile-avatar-large {
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .profile-name {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    body.dark .profile-name {
+      color: #eef2ff;
+    }
+
+    .profile-email {
+      font-size: 1rem;
+      color: #64748b;
+      margin-top: 5px;
+    }
+
+    body.dark .profile-email {
+      color: #94a3b8;
+    }
+
+    .profile-bio {
+      font-size: 0.95rem;
+      color: #475569;
+      margin-top: 8px;
+      font-style: italic;
+      padding: 0 20px;
+    }
+
+    body.dark .profile-bio {
+      color: #94a3b8;
+    }
+
+    .profile-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin: 30px 0;
+      padding: 20px 0;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    body.dark .profile-stats {
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .profile-stat-item {
+      text-align: center;
+    }
+
+    .profile-stat-item .stat-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #4f46e5;
+    }
+
+    body.dark .profile-stat-item .stat-number {
+      color: #818cf8;
+    }
+
+    .profile-stat-item .stat-label {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-top: 3px;
+    }
+
+    body.dark .profile-stat-item .stat-label {
+      color: #94a3b8;
+    }
+
+    .profile-menu {
+      margin-top: 20px;
+    }
+
+    .profile-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px 20px;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #1e293b;
+      text-decoration: none;
+      margin-bottom: 5px;
+    }
+
+    body.dark .profile-menu-item {
+      color: #eef2ff;
+    }
+
+    .profile-menu-item:hover {
+      background: rgba(99, 102, 241, 0.1);
+      transform: translateX(5px);
+    }
+
+    .profile-menu-item i {
+      width: 24px;
+      color: #4f46e5;
+      font-size: 1.2rem;
+    }
+
+    body.dark .profile-menu-item i {
+      color: #818cf8;
+    }
+
+    .profile-menu-item .menu-text {
+      flex: 1;
+    }
+
+    .profile-menu-item .menu-arrow {
+      color: #94a3b8;
+    }
+
+    .profile-menu-item.danger {
+      color: #ef4444;
+    }
+
+    .profile-menu-item.danger i {
+      color: #ef4444;
+    }
+
+    .profile-menu-item.danger:hover {
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    /* ============================================ */
+    /* EDIT PROFILE MODAL */
+    /* ============================================ */
+    .edit-profile-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .edit-profile-modal.active {
+      display: flex;
+    }
+
+    .edit-profile-content {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 30px;
+      max-width: 550px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 40px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+    }
+
+    body.dark .edit-profile-content {
+      background: rgba(20, 25, 45, 0.95);
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .edit-profile-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 28px;
+      cursor: pointer;
+      color: #4f46e5;
+      transition: 0.3s;
+      background: none;
+      border: none;
+    }
+
+    .edit-profile-close:hover {
+      transform: rotate(90deg);
+      color: #ec4899;
+    }
+
+    .edit-profile-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    body.dark .edit-profile-title {
+      color: #eef2ff;
+    }
+
+    .edit-profile-group {
+      margin-bottom: 20px;
+    }
+
+    .edit-profile-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #1e293b;
+      font-size: 0.95rem;
+    }
+
+    body.dark .edit-profile-group label {
+      color: #eef2ff;
+    }
+
+    .edit-profile-group input,
+    .edit-profile-group textarea {
+      width: 100%;
+      padding: 12px 18px;
+      border: 2px solid rgba(0, 0, 0, 0.1);
+      outline: none;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.8);
+      color: #1e293b;
+      font-size: 16px;
+      font-family: 'Inter', sans-serif;
+      transition: 0.3s;
+    }
+
+    body.dark .edit-profile-group input,
+    body.dark .edit-profile-group textarea {
+      background: rgba(255, 255, 255, 0.1);
+      color: #eef2ff;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .edit-profile-group input:focus,
+    .edit-profile-group textarea:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    }
+
+    .edit-profile-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .edit-profile-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .edit-profile-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 50px;
+      background: #4f46e5;
+      color: white;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s;
+      font-family: 'Inter', sans-serif;
+      margin-top: 10px;
+    }
+
+    .edit-profile-btn:hover {
+      background: #4338ca;
+      transform: scale(1.02);
+    }
+
+    .edit-profile-btn-secondary {
+      background: #e2e8f0;
+      color: #1e293b;
+      margin-top: 10px;
+    }
+
+    .edit-profile-btn-secondary:hover {
+      background: #cbd5e1;
+    }
+
+    body.dark .edit-profile-btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #eef2ff;
+    }
+
+    body.dark .edit-profile-btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .profile-pic-upload {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 15px;
+      background: rgba(99, 102, 241, 0.05);
+      border-radius: 15px;
+      border: 2px dashed rgba(99, 102, 241, 0.3);
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .profile-pic-upload:hover {
+      background: rgba(99, 102, 241, 0.1);
+      border-color: #4f46e5;
+    }
+
+    .profile-pic-preview {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #818cf8, #6366f1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 2rem;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .profile-pic-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-pic-info {
+      flex: 1;
+    }
+
+    .profile-pic-info p {
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+
+    body.dark .profile-pic-info p {
+      color: #94a3b8;
+    }
+
+    .profile-pic-info i {
+      color: #4f46e5;
+      margin-right: 8px;
+    }
+
+    #profilePicInput {
+      display: none;
+    }
+
+    /* ============================================ */
+    /* ACCOUNT SETTINGS MODAL */
+    /* ============================================ */
+    .settings-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 2500;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .settings-modal.active {
+      display: flex;
+    }
+
+    .settings-content {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 30px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 40px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+    }
+
+    body.dark .settings-content {
+      background: rgba(20, 25, 45, 0.95);
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .settings-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 28px;
+      cursor: pointer;
+      color: #4f46e5;
+      transition: 0.3s;
+      background: none;
+      border: none;
+    }
+
+    .settings-close:hover {
+      transform: rotate(90deg);
+      color: #ec4899;
+    }
+
+    .settings-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    body.dark .settings-title {
+      color: #eef2ff;
+    }
+
+    .settings-item {
+      padding: 15px 20px;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 5px;
+      color: #1e293b;
+    }
+
+    body.dark .settings-item {
+      color: #eef2ff;
+    }
+
+    .settings-item:hover {
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    .settings-item i {
+      width: 24px;
+      color: #4f46e5;
+      font-size: 1.2rem;
+    }
+
+    body.dark .settings-item i {
+      color: #818cf8;
+    }
+
+    .settings-item .settings-text {
+      flex: 1;
+    }
+
+    .settings-item .settings-arrow {
+      color: #94a3b8;
+    }
+
+    /* Language selector inside settings */
+    .language-selector-inline {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px 20px;
+      border-radius: 15px;
+      background: rgba(99, 102, 241, 0.05);
+      margin-bottom: 5px;
+    }
+
+    .language-selector-inline i {
+      width: 24px;
+      color: #4f46e5;
+      font-size: 1.2rem;
+    }
+
+    .language-selector-inline .lang-label {
+      flex: 1;
+      font-weight: 500;
+      color: #1e293b;
+    }
+
+    body.dark .language-selector-inline .lang-label {
+      color: #eef2ff;
+    }
+
+    .language-selector-inline select {
+      padding: 8px 15px;
+      border: 2px solid rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.8);
+      color: #1e293b;
+      font-size: 14px;
+      outline: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    body.dark .language-selector-inline select {
+      background: rgba(255, 255, 255, 0.1);
+      color: #eef2ff;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .language-selector-inline select:focus {
+      border-color: #4f46e5;
+    }
+
+    .language-selector-inline select option {
+      background: #fff;
+      color: #1e293b;
+    }
+
+    body.dark .language-selector-inline select option {
+      background: #1e293b;
+      color: #eef2ff;
+    }
+
+    /* ============================================ */
+    /* HELP & SUPPORT MODAL */
+    /* ============================================ */
+    .help-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 2600;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .help-modal.active {
+      display: flex;
+    }
+
+    .help-content {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 30px;
+      max-width: 500px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 40px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      text-align: center;
+    }
+
+    body.dark .help-content {
+      background: rgba(20, 25, 45, 0.95);
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .help-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 28px;
+      cursor: pointer;
+      color: #4f46e5;
+      transition: 0.3s;
+      background: none;
+      border: none;
+    }
+
+    .help-close:hover {
+      transform: rotate(90deg);
+      color: #ec4899;
+    }
+
+    .help-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 25px;
+    }
+
+    body.dark .help-title {
+      color: #eef2ff;
+    }
+
+    .help-info {
+      text-align: left;
+      padding: 15px 0;
+    }
+
+    .help-info-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    body.dark .help-info-item {
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .help-info-item:last-child {
+      border-bottom: none;
+    }
+
+    .help-info-item i {
+      width: 30px;
+      color: #4f46e5;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+
+    body.dark .help-info-item i {
+      color: #818cf8;
+    }
+
+    .help-info-item .help-label {
+      font-weight: 600;
+      color: #1e293b;
+      min-width: 80px;
+    }
+
+    body.dark .help-info-item .help-label {
+      color: #eef2ff;
+    }
+
+    .help-info-item .help-value {
+      color: #475569;
+      word-break: break-word;
+    }
+
+    body.dark .help-info-item .help-value {
+      color: #94a3b8;
+    }
+
+    .help-info-item .help-value a {
+      color: #4f46e5;
+      text-decoration: none;
+    }
+
+    .help-info-item .help-value a:hover {
+      text-decoration: underline;
+    }
+
+    /* ============================================ */
+    /* GRID CARDS */
+    /* ============================================ */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 1.5rem;
+      margin: 2.8rem 0 2rem;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px) saturate(160%);
+      -webkit-backdrop-filter: blur(10px) saturate(160%);
+      border-radius: 2rem;
+      padding: 1.5rem 0.8rem 1.2rem;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.05);
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    body.dark .glass-card {
+      background: rgba(30, 35, 55, 0.35);
+      border-color: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.4);
+    }
+
+    .glass-card:hover {
+      transform: translateY(-4px);
+      background: rgba(255, 255, 255, 0.4);
+      border-color: rgba(255, 255, 255, 0.6);
+      box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.12);
+    }
+
+    body.dark .glass-card:hover {
+      background: rgba(55, 60, 90, 0.4);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .glass-card i {
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+      color: #4f46e5;
+      filter: drop-shadow(0 6px 10px rgba(79, 70, 229, 0.2));
+    }
+
+    body.dark .glass-card i {
+      color: #818cf8;
+      filter: drop-shadow(0 6px 10px rgba(99, 102, 241, 0.2));
+    }
+
+    .glass-card span {
+      display: block;
+      font-family: 'Playfair Display', 'Times New Roman', serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: -0.01em;
+      color: #0f172a;
+      line-height: 1.4;
+      margin-top: 0.25rem;
+    }
+
+    body.dark .glass-card span {
+      color: #eef2ff;
+    }
+
+    /* dashboard preview / analytics */
+    .dashboard-preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.8rem;
+      margin-top: 1.5rem;
+      padding: 1.8rem 1.8rem 2rem;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 2.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    body.dark .dashboard-preview {
+      background: rgba(20, 25, 45, 0.3);
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .stat-group {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .stat-item i {
+      font-size: 1.6rem;
+      color: #6366f1;
+      opacity: 0.8;
+    }
+
+    body.dark .stat-item i {
+      color: #818cf8;
+    }
+
+    .stat-item div {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-item .num {
+      font-weight: 700;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .stat-item .label {
+      font-size: 0.8rem;
+      opacity: 0.6;
+      letter-spacing: 0.02em;
+    }
+
+    .action-pill {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 3rem;
+      padding: 0.7rem 1.8rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      color: #1e293b;
+      transition: 0.2s;
+      cursor: default;
+    }
+
+    body.dark .action-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+    }
+
+    .action-pill i {
+      color: #4f46e5;
+    }
+
+    body.dark .action-pill i {
+      color: #818cf8;
+    }
+
+    /* footer extra */
+    .footer-extra {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: 2.2rem;
+      gap: 1rem;
+    }
+
+    .settings-icon-btn {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 3rem;
+      padding: 0.6rem 1rem;
+      font-size: 1.1rem;
+      color: #1e293b;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+    }
+
+    body.dark .settings-icon-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+    }
+
+    .settings-icon-btn:hover {
+      background: rgba(255, 255, 255, 0.5);
+      transform: scale(1.02);
+    }
+
+    body.dark .settings-icon-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    hr {
+      margin: 1.5rem 0 0.5rem;
+      border: none;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    body.dark hr {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* badge */
+    .badge-ghost {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(4px);
+      border-radius: 30px;
+      padding: 0.2rem 0.9rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #475569;
+    }
+
+    body.dark .badge-ghost {
+      color: #b9c7e6;
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    /* responsive */
+    @media (max-width: 700px) {
+      .app-container {
+        padding: 1.5rem;
+        border-radius: 2rem;
+      }
+      .header {
+        flex-direction: column;
+        align-items: start;
+        gap: 1rem;
+      }
+      .header-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+      .feature-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 1rem;
+      }
+      .dashboard-preview {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .stat-group {
+        justify-content: space-around;
+      }
+      .footer-extra {
+        justify-content: flex-start;
+      }
+      .auth-box {
+        padding: 30px 20px;
+        margin: 1rem;
+      }
+      .profile-modal-content,
+      .edit-profile-content,
+      .feature-dashboard-content,
+      .settings-content,
+      .help-content {
+        padding: 30px 20px;
+        margin: 15px;
+      }
+      .profile-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .edit-profile-row {
+        grid-template-columns: 1fr;
+      }
+      .feature-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* hide/show utility */
+    .hidden {
+      display: none !important;
+    }
+
+    /* Success/Error messages */
+    .success-msg {
+      background: rgba(34, 197, 94, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      color: #fff;
+      padding: 10px 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .error-msg {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fff;
+      padding: 10px 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: rgba(34, 197, 94, 0.95);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      z-index: 5000;
+      animation: slideUp 0.5s ease;
+      font-weight: 500;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Dashboard header */
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2.5rem;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-icon {
+      background: rgba(99, 102, 241, 0.25);
+      backdrop-filter: blur(4px);
+      padding: 0.6rem 0.9rem;
+      border-radius: 1.8rem;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      font-size: 1.6rem;
+      color: #4f46e5;
+      box-shadow: 0 8px 20px -8px rgba(79, 70, 229, 0.2);
+    }
+
+    body.dark .logo-icon {
+      background: rgba(99, 102, 241, 0.2);
+      color: #818cf8;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .logo-text {
+      font-family: 'Playfair Display', 'Times New Roman', serif;
+      font-weight: 700;
+      font-size: 1.6rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(145deg, 
+        #1e1b4b 0%,
+        #4f46e5 20%,
+        #7c3aed 40%,
+        #db2777 60%,
+        #f43f5e 80%,
+        #1e1b4b 100%
+      );
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: gradientMove 4s ease infinite;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    body.dark .logo-text {
+      background: linear-gradient(145deg, 
+        #ff6b6b, 
+        #ffd93d, 
+        #6bcb77, 
+        #4d96ff, 
+        #9b59b6
+      );
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: gradientMove 3s ease infinite;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 3rem;
+      padding: 0.6rem 1rem;
+      font-size: 0.95rem;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    body.dark .icon-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+    }
+
+    .icon-btn i {
+      font-size: 1.1rem;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.5);
+      transform: scale(1.02);
+    }
+
+    body.dark .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 40px;
+      background: linear-gradient(145deg, #818cf8, #6366f1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 1.1rem;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 8px 16px -6px rgba(99, 102, 241, 0.3);
+      cursor: pointer;
+      transition: 0.2s;
+      overflow: hidden;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    body.dark .avatar {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .avatar:hover {
+      transform: scale(1.05);
+    }
+    /* ============================================ */
+    /* FUNCTIONAL PANELS (Chat/Docs/Notes/Planner/Team/Quiz) */
+    /* ============================================ */
+    .fd-panel { margin-top: 24px; text-align: left; }
+    .fd-panel.hidden { display: none; }
+    .fd-row { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .fd-input, .fd-textarea, .fd-select {
+      width: 100%; padding: 10px 12px; border-radius: 10px;
+      border: 1px solid #d5dae3; font-size: 14px; font-family: inherit;
+      background: #fff; color: #222; margin-bottom: 10px; box-sizing: border-box;
+    }
+    body.dark .fd-input, body.dark .fd-textarea, body.dark .fd-select {
+      background: #2a2f3d; color: #eee; border-color: #444b5c;
+    }
+    .fd-textarea { min-height: 90px; resize: vertical; }
+    .fd-note-summary {
+      margin-top: 12px; padding: 14px; border: 1px solid #e2e6ee;
+      border-radius: 10px; background: #f5f7fb; color: #222;
+    }
+    .fd-note-summary[hidden] { display: none; }
+    .fd-note-summary h5 { margin: 0 0 8px; font-size: 14px; }
+    .fd-note-summary-content { white-space: pre-wrap; line-height: 1.55; }
+    body.dark .fd-note-summary {
+      background: #202533; color: #eee; border-color: #3a4152;
+    }
+    .fd-btn {
+      padding: 9px 18px; border-radius: 10px; border: none; cursor: pointer;
+      background: linear-gradient(135deg,#4b6cf7,#7b4bf7); color: #fff;
+      font-weight: 600; font-size: 13px;
+    }
+    .fd-btn:hover { opacity: 0.9; }
+    .fd-btn.secondary { background: #6b7280; }
+    .fd-btn.danger { background: #e5484d; }
+    .fd-btn.small { padding: 5px 12px; font-size: 12px; }
+    .fd-list { max-height: 320px; overflow-y: auto; border: 1px solid #e2e6ee; border-radius: 10px; }
+    body.dark .fd-list { border-color: #3a4152; }
+    .fd-list-item {
+      padding: 12px 14px; border-bottom: 1px solid #eef0f5; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center; gap: 8px;
+    }
+    body.dark .fd-list-item { border-color: #333a48; }
+    .fd-list-item:last-child { border-bottom: none; }
+    .fd-list-item:hover { background: #f5f7fb; }
+    body.dark .fd-list-item:hover { background: #2c3242; }
+    .fd-list-item-title { font-weight: 600; font-size: 14px; }
+    .fd-list-item-sub { font-size: 12px; color: #888; margin-top: 2px; }
+    .fd-empty { padding: 20px; text-align: center; color: #999; font-size: 13px; }
+    .fd-modal-backdrop { position: fixed; inset: 0; z-index: 4000; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(15, 23, 42, 0.52); }
+    .fd-modal { width: min(100%, 400px); padding: 20px; border: 1px solid #e2e6ee; border-radius: 10px; background: #fff; color: #222; box-shadow: 0 18px 48px rgba(0, 0, 0, 0.2); }
+    body.dark .fd-modal { background: #202533; color: #eee; border-color: #3a4152; }
+    .fd-modal h3 { margin: 0 0 8px; font-size: 18px; }
+    .fd-modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
+    .fd-tabs { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+    .fd-tab {
+      padding: 7px 14px; border-radius: 20px; background: #eef1f7; cursor: pointer;
+      font-size: 13px; font-weight: 600; color: #555;
+    }
+    body.dark .fd-tab { background: #2a2f3d; color: #bbb; }
+    .fd-tab.active { background: linear-gradient(135deg,#4b6cf7,#7b4bf7); color: #fff; }
+    .fd-chat-box { display: flex; flex-direction: column; height: 380px; }
+    .fd-chat-messages { flex: 1; overflow-y: auto; border: 1px solid #e2e6ee; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
+    body.dark .fd-chat-messages { border-color: #3a4152; }
+    .fd-msg { max-width: 80%; padding: 8px 12px; border-radius: 12px; margin-bottom: 8px; font-size: 13.5px; line-height: 1.4; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .fd-msg.user { background: linear-gradient(135deg,#4b6cf7,#7b4bf7); color: #fff; margin-left: auto; }
+    .fd-msg.ai { background: #eef1f7; color: #222; margin-right: auto; }
+    body.dark .fd-msg.ai { background: #2a2f3d; color: #eee; }
+    .fd-chat-input-row { display: flex; gap: 8px; }
+    .fd-chat-input-row .fd-input { margin-bottom: 0; flex: 1; }
+    .fd-chat-composer { position: relative; }
+    .fd-chat-doc-picker { position: absolute; bottom: calc(100% + 8px); left: 0; z-index: 5; max-height: 220px; overflow-y: auto; min-width: min(320px, 90vw); padding: 10px; border: 1px solid #d5dae3; border-radius: 8px; background: #fff; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12); }
+    body.dark .fd-chat-doc-picker { background: #2a2f3d; border-color: #444b5c; }
+    .fd-chat-doc-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+    .fd-chat-doc-chip { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 4px 8px; border-radius: 14px; background: #eef1f7; color: #333; font-size: 12px; }
+    body.dark .fd-chat-doc-chip { background: #2a2f3d; color: #eee; }
+    .fd-chat-doc-chip button { padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; font-size: 14px; line-height: 1; }
+    .fd-chat-image-preview { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .fd-chat-image-preview img { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; border: 1px solid #d8deea; }
+    .fd-chat-image-preview button { border: 0; background: transparent; color: inherit; cursor: pointer; font-size: 18px; }
+    .fd-chat-image-name { font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .fd-badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: #eef1f7; color: #666; }
+    body.dark .fd-badge { background: #2a2f3d; color: #bbb; }
+    .fd-quiz-option { display: block; padding: 8px 10px; border: 1px solid #e2e6ee; border-radius: 8px; margin-bottom: 6px; cursor: pointer; font-size: 13.5px; }
+    body.dark .fd-quiz-option { border-color: #3a4152; }
+    .fd-quiz-option.selected { border-color: #4b6cf7; background: #eef1ff; }
+    body.dark .fd-quiz-option.selected { background: #2c3355; }
+    .fd-back-link { display: inline-block; margin-bottom: 10px; font-size: 13px; color: #4b6cf7; cursor: pointer; font-weight: 600; }
+    /* auto-hide the 3/4 icon cards whenever a panel is showing content */
+    .feature-dashboard-content:has(.fd-panel:not(.hidden):not(:empty)) .feature-cards { display: none; }
+  </style>
+</head>
+<body>
+
+<!-- ============================================ -->
+<!-- DASHBOARD PAGE -->
+<!-- ============================================ -->
+<div class="app-container dashboard-page" id="dashboardPage">
+  <header class="header">
+    <div class="logo-area">
+      <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+      <span class="logo-text">LearnMateAI</span>
+      <span class="badge-ghost">research</span>
+    </div>
+    <div class="header-actions">
+      <div class="icon-btn" id="themeToggle" title="Toggle dark/light">
+        <i class="fas fa-moon" id="themeIcon"></i> <span id="themeLabel">Dark</span>
+      </div>
+      <div class="icon-btn" id="logoutBtn">
+        <i class="fas fa-sign-out-alt"></i> <span id="logoutText">Logout</span>
+      </div>
+      <div class="avatar" id="profileAvatar">JD</div>
+    </div>
+  </header>
+
+  <!-- feature grid -->
+  <div class="feature-grid">
+    <div class="glass-card" data-feature="ai-chat"><i class="fas fa-comment-dots"></i><span id="featureAIChat">AI Chat</span></div>
+    <div class="glass-card" data-feature="document-upload"><i class="fas fa-file-upload"></i><span id="featureDocumentUpload">Document Upload</span></div>
+    <div class="glass-card" data-feature="smart-notes"><i class="fas fa-sticky-note"></i><span id="featureSmartNotes">Smart Notes</span></div>
+    <div class="glass-card" data-feature="planner"><i class="fas fa-calendar-check"></i><span id="featurePlanner">Planner</span></div>
+    <div class="glass-card" data-feature="team-workspace"><i class="fas fa-users"></i><span id="featureTeamWorkspace">Team Workspace</span></div>
+    <div class="glass-card" data-feature="quizz"><i class="fas fa-question-circle"></i><span id="featureQuizz">Quizz</span></div>
+  </div>
+
+  <!-- footer -->
+  <div class="footer-extra">
+    <button class="settings-icon-btn" id="settingsIconBtn" title="Settings">
+      <i class="fas fa-cog"></i>
+    </button>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- FEATURE DASHBOARDS -->
+<!-- ============================================ -->
+<!-- AI Chat Dashboard -->
+<div class="feature-dashboard" id="aiChatDashboard">
+  <div class="feature-dashboard-content">
+    <button class="feature-dashboard-close" onclick="closeFeatureDashboard('aiChatDashboard')">&times;</button>
+    <div class="feature-dashboard-title"><i class="fas fa-comment-dots"></i> <span id="fdAIChat">AI Chat</span></div>
+    <div class="feature-cards">
+      <div class="feature-action-card" onclick="chatModule.startNewChat()">
+        <i class="fas fa-plus-circle"></i>
+        <h4 id="fdNewChat">New Chat</h4>
+        <p id="fdNewChatDesc">Start a new conversation</p>
+      </div>
+      <div class="feature-action-card" onclick="chatModule.showHistory()">
+        <i class="fas fa-history"></i>
+        <h4 id="fdChatHistory">Chat History</h4>
+        <p id="fdChatHistoryDesc">View past conversations</p>
+      </div>
+      <div class="feature-action-card" onclick="chatModule.exportCurrent()">
+        <i class="fas fa-download"></i>
+        <h4 id="fdExportChat">Export Chat</h4>
+        <p id="fdExportChatDesc">Download conversation</p>
+      </div>
+    </div>
+    <div class="fd-panel hidden" id="chatPanel"></div>
+  </div>
+</div>
+
+<!-- Document Upload Dashboard -->
+<div class="feature-dashboard" id="documentUploadDashboard">
+  <div class="feature-dashboard-content">
+    <button class="feature-dashboard-close" onclick="closeFeatureDashboard('documentUploadDashboard')">&times;</button>
+    <div class="feature-dashboard-title"><i class="fas fa-file-upload"></i> <span id="fdDocumentUpload">Document Upload</span></div>
+    <div class="feature-cards">
+      <div class="feature-action-card" onclick="docModule.showUpload()">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <h4 id="fdUploadDoc">Upload Document</h4>
+        <p id="fdUploadDocDesc">Upload PDF, DOC, TXT</p>
+      </div>
+      <div class="feature-action-card" onclick="docModule.showList()">
+        <i class="fas fa-list"></i>
+        <h4 id="fdMyDocs">My Documents</h4>
+        <p id="fdMyDocsDesc">View uploaded files</p>
+      </div>
+    </div>
+    <div class="fd-panel hidden" id="docPanel"></div>
+  </div>
+</div>
+
+<!-- Smart Notes Dashboard -->
+<div class="feature-dashboard" id="smartNotesDashboard">
+  <div class="feature-dashboard-content">
+    <button class="feature-dashboard-close" onclick="closeFeatureDashboard('smartNotesDashboard')">&times;</button>
+    <div class="feature-dashboard-title"><i class="fas fa-sticky-note"></i> <span id="fdSmartNotes">Smart Notes</span></div>
+    <div class="feature-cards">
+      <div class="feature-action-card" onclick="notesModule.showAISummarize()">
+        <i class="fas fa-magic"></i>
+        <h4 id="fdAISummary">AI Summarize</h4>
+        <p id="fdAISummaryDesc">Summarize your notes</p>
+      </div>
+      <div class="feature-action-card" onclick="notesModule.showList()">
+        <i class="fas fa-list-ul"></i>
+        <h4 id="fdAllNotes">All Notes</h4>
+        <p id="fdAllNotesDesc">View all your notes</p>
+      </div>
+    </div>
+    <div class="fd-panel hidden" id="notesPanel"></div>
+  </div>
+</div>
+
+<!-- Planner Dashboard -->
+<div class="feature-dashboard" id="plannerDashboard">
+  <div class="feature-dashboard-content">
+    <button class="feature-dashboard-close" onclick="closeFeatureDashboard('plannerDashboard')">&times;</button>
+    <div class="feature-dashboard-title"><i class="fas fa-calendar-check"></i> <span id="fdPlanner">Planner</span></div>
+    <div class="feature-cards">
+      <div class="feature-action-card" onclick="plannerModule.showAddTask()">
+        <i class="fas fa-plus"></i>
+        <h4 id="fdAddTask">Add Task</h4>
+        <p id="fdAddTaskDesc">Create a new task</p>
+      </div>
+      <div class="feature-action-card" onclick="plannerModule.showTasks()">
+        <i class="fas fa-tasks"></i>
+        <h4 id="fdMyTasks">My Tasks</h4>
+        <p id="fdMyTasksDesc">View all tasks</p>
+      </div>
+      <div class="feature-action-card" onclick="plannerModule.showReminders()">
+        <i class="fas fa-bell"></i>
+        <h4 id="fdReminders">Reminders</h4>
+        <p id="fdRemindersDesc">Set task reminders</p>
+      </div>
+    </div>
+    <div class="fd-panel hidden" id="plannerPanel"></div>
+  </div>
+</div>
+
+<!-- Team Workspace Dashboard -->
+<div class="feature-dashboard" id="teamWorkspaceDashboard">
+  <div class="feature-dashboard-content">
+    <button class="feature-dashboard-close" onclick="closeFeatureDashboard('teamWorkspaceDashboard')">&times;</button>
+    <div class="feature-dashboard-title"><i class="fas fa-users"></i> <span id="fdTeamWorkspace">Team Workspace</span></div>
+    <div class="feature-cards">
+      <div class="feature-action-card" onclick="teamModule.showTeams()">
+        <i class="fas fa-plus"></i>
+        <h4 id="fdCreateTeam">Create Team</h4>
+        <p id="fdCreateTeamDesc">Create a new team</p>
+      </div>
+      <div class="feature-action-card" onclick="teamModule.showChat()">
+        <i class="fas fa-comments"></i>
+        <h4 id="fdTeamChat">Team Chat</h4>
+        <p id="fdTeamChatDesc">Communicate with team</p>
+      </div>
+    </div>
+    <div class="fd-panel hidden" id="teamPanel"></div>
+  </div>
+</div>
+
+<!-- Quizz Dashboard -->
+<div class="feature-dashboard" id="quizzDashboard">
+  <div class="feature-dashboard-content">
+    <button class="feature-dashboard-close" onclick="closeFeatureDashboard('quizzDashboard')">&times;</button>
+    <div class="feature-dashboard-title"><i class="fas fa-question-circle"></i> <span id="fdQuizz">Quizz</span></div>
+    <div class="feature-cards">
+      <div class="feature-action-card" onclick="quizModule.showTakeQuizPicker()">
+        <i class="fas fa-play"></i>
+        <h4 id="fdTakeQuiz">Take Quiz</h4>
+        <p id="fdTakeQuizDesc">Start a quiz session</p>
+      </div>
+      <div class="feature-action-card" onclick="quizModule.showList()">
+        <i class="fas fa-list"></i>
+        <h4 id="fdMyQuizzes">My Quizzes</h4>
+        <p id="fdMyQuizzesDesc">View all quizzes</p>
+      </div>
+    </div>
+    <div class="fd-panel hidden" id="quizPanel"></div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- PROFILE MODAL -->
+<!-- ============================================ -->
+<div class="profile-modal" id="profileModal">
+  <div class="profile-modal-content">
+    <button class="profile-modal-close" id="closeProfileModal">&times;</button>
+    
+    <div class="profile-header">
+      <div class="profile-avatar-large" id="profileAvatarLarge">
+        <span id="avatarInitial">JD</span>
+        <div class="avatar-overlay">
+          <i class="fas fa-camera"></i>
+        </div>
+      </div>
+      <div class="profile-name" id="profileNameDisplay">John Doe</div>
+      <div class="profile-email" id="profileEmailDisplay">john@example.com</div>
+      <div class="profile-bio" id="profileBioDisplay">Passionate learner & tech enthusiast</div>
+    </div>
+
+    <div class="profile-menu">
+      <div class="profile-menu-item" id="editProfileBtn">
+        <i class="fas fa-user-edit"></i>
+        <span class="menu-text" id="pEditProfile">Edit Profile</span>
+        <i class="fas fa-chevron-right menu-arrow"></i>
+      </div>
+      <div class="profile-menu-item" id="accountSettingsBtn">
+        <i class="fas fa-cog"></i>
+        <span class="menu-text" id="pAccountSettings">Account Settings</span>
+        <i class="fas fa-chevron-right menu-arrow"></i>
+      </div>
+      <div class="profile-menu-item" onclick="alert('Notification settings — this feature is coming soon!')">
+        <i class="fas fa-bell"></i>
+        <span class="menu-text" id="pNotifications">Notifications</span>
+        <i class="fas fa-chevron-right menu-arrow"></i>
+      </div>
+      <div class="profile-menu-item" onclick="alert('Privacy & Security settings — this feature is coming soon!')">
+        <i class="fas fa-shield-alt"></i>
+        <span class="menu-text" id="pPrivacy">Privacy & Security</span>
+        <i class="fas fa-chevron-right menu-arrow"></i>
+      </div>
+      <div class="profile-menu-item" onclick="alert('Theme customization — this feature is coming soon!')">
+        <i class="fas fa-palette"></i>
+        <span class="menu-text" id="pTheme">Theme Customization</span>
+        <i class="fas fa-chevron-right menu-arrow"></i>
+      </div>
+      <div class="profile-menu-item" id="helpSupportBtn">
+        <i class="fas fa-life-ring"></i>
+        <span class="menu-text" id="pHelpSupport">Help & Support</span>
+        <i class="fas fa-chevron-right menu-arrow"></i>
+      </div>
+      <div class="profile-menu-item danger" id="profileLogoutBtn">
+        <i class="fas fa-sign-out-alt"></i>
+        <span class="menu-text" id="pLogout">Logout</span>
+        <i class="fas fa-chevron-right menu-arrow"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- EDIT PROFILE MODAL -->
+<!-- ============================================ -->
+<div class="edit-profile-modal" id="editProfileModal">
+  <div class="edit-profile-content">
+    <button class="edit-profile-close" id="closeEditProfile">&times;</button>
+    <div class="edit-profile-title" id="epTitle">Edit Profile</div>
+    
+    <form id="editProfileForm">
+      <div class="edit-profile-group">
+        <label id="epProfilePic">Profile Picture</label>
+        <div class="profile-pic-upload" id="profilePicUpload">
+          <div class="profile-pic-preview" id="profilePicPreview">
+            <span id="picPreviewInitial">JD</span>
+          </div>
+          <div class="profile-pic-info">
+            <p><i class="fas fa-cloud-upload-alt"></i> <span id="epClickUpload">Click to upload from gallery</span></p>
+            <p style="font-size: 0.8rem; opacity: 0.6;" id="epFileTypes">PNG, JPG, GIF up to 5MB</p>
+          </div>
+        </div>
+        <input type="file" id="profilePicInput" accept="image/*">
+      </div>
+
+      <div class="edit-profile-row">
+        <div class="edit-profile-group">
+          <label id="epFirstName">First Name</label>
+          <input type="text" id="editFirstName" placeholder="First Name">
+        </div>
+        <div class="edit-profile-group">
+          <label id="epLastName">Last Name</label>
+          <input type="text" id="editLastName" placeholder="Last Name">
+        </div>
+      </div>
+
+      <div class="edit-profile-group">
+        <label id="epFullName">Full Name (Display)</label>
+        <input type="text" id="editFullName" placeholder="Full Name">
+      </div>
+
+      <div class="edit-profile-group">
+        <label id="epBio">Bio</label>
+        <textarea id="editBio" placeholder="Tell us about yourself..."></textarea>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button type="submit" class="edit-profile-btn" id="epSaveBtn">
+          <i class="fas fa-save"></i> <span id="epSave">Save Changes</span>
+        </button>
+        <button type="button" class="edit-profile-btn edit-profile-btn-secondary" id="cancelEditProfile">
+          <span id="epCancel">Cancel</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- ACCOUNT SETTINGS MODAL -->
+<!-- ============================================ -->
+<div class="settings-modal" id="settingsModal">
+  <div class="settings-content">
+    <button class="settings-close" id="closeSettings">&times;</button>
+    <div class="settings-title"><i class="fas fa-cog" style="margin-right: 10px; color: #4f46e5;"></i> <span id="sTitle">Account Settings</span></div>
+    
+    <div class="settings-item" onclick="showChangePasswordForm()">
+      <i class="fas fa-key"></i>
+      <span class="settings-text" id="sChangePassword">Change Password</span>
+      <i class="fas fa-chevron-right settings-arrow"></i>
+    </div>
+    <div class="fd-panel hidden" id="changePasswordPanel" style="margin: 10px 0;"></div>
+    <div class="settings-item" onclick="alert('Email Preferences — this feature is coming soon!')">
+      <i class="fas fa-envelope"></i>
+      <span class="settings-text" id="sEmailPrefs">Email Preferences</span>
+      <i class="fas fa-chevron-right settings-arrow"></i>
+    </div>
+    <div class="settings-item" onclick="alert('Two-Factor Authentication — this feature is coming soon!')">
+      <i class="fas fa-shield-alt"></i>
+      <span class="settings-text" id="sTwoFactor">Two-Factor Authentication</span>
+      <i class="fas fa-chevron-right settings-arrow"></i>
+    </div>
+    
+    <!-- Language Selector inside Settings -->
+    <div class="language-selector-inline">
+      <i class="fas fa-language"></i>
+      <span class="lang-label" id="sLanguage">Language</span>
+      <select id="settingsLanguageSelect">
+        <option value="en">English</option>
+        <option value="te">తెలుగు</option>
+        <option value="hi">हिन्दी</option>
+      </select>
+    </div>
+    
+    <div class="settings-item" onclick="alert('Timezone settings — this feature is coming soon!')">
+      <i class="fas fa-clock"></i>
+      <span class="settings-text" id="sTimezone">Timezone</span>
+      <i class="fas fa-chevron-right settings-arrow"></i>
+    </div>
+    <div class="settings-item" onclick="if(confirm('Are you sure you want to delete your account? This action cannot be undone.')){showToast('Account deletion request submitted!');}">
+      <i class="fas fa-trash-alt" style="color: #ef4444;"></i>
+      <span class="settings-text" style="color: #ef4444;" id="sDeleteAccount">Delete Account</span>
+      <i class="fas fa-chevron-right settings-arrow"></i>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- HELP & SUPPORT MODAL -->
+<!-- ============================================ -->
+<div class="help-modal" id="helpModal">
+  <div class="help-content">
+    <button class="help-close" id="closeHelp">&times;</button>
+    <div class="help-title"><i class="fas fa-life-ring" style="margin-right: 10px; color: #4f46e5;"></i> <span id="hTitle">Help & Support</span></div>
+    
+    <div class="help-info">
+      <div class="help-info-item">
+        <i class="fas fa-user"></i>
+        <span class="help-label" id="hNameLabel">Name</span>
+        <span class="help-value">Ch.Kesav Anandh</span>
+      </div>
+      <div class="help-info-item">
+        <i class="fas fa-envelope"></i>
+        <span class="help-label" id="hEmailLabel">Email</span>
+        <span class="help-value"><a href="mailto:learnmateaisupport@gmail.com">learnmateaisupport@gmail.com</a></span>
+      </div>
+      <div class="help-info-item">
+        <i class="fas fa-phone"></i>
+        <span class="help-label" id="hPhoneLabel">Phone</span>
+        <span class="help-value"><a href="tel:9440617289">9440617289</a></span>
+      </div>
+      <div class="help-info-item">
+        <i class="fas fa-clock"></i>
+        <span class="help-label" id="hHoursLabel">Hours</span>
+        <span class="help-value" id="hHoursValue">24/7 Available</span>
+      </div>
+      <div class="help-info-item">
+        <i class="fas fa-comment"></i>
+        <span class="help-label" id="hResponseLabel">Response</span>
+        <span class="help-value" id="hResponseValue">Within 24 hours</span>
+      </div>
+    </div>
+    
+    <div style="margin-top: 25px; display: flex; gap: 10px; flex-wrap: wrap;">
+      <button class="edit-profile-btn" onclick="window.location.href='mailto:learnmateaisupport@gmail.com'" style="flex: 1;" id="hSendEmailBtn">
+        <i class="fas fa-envelope"></i> <span id="hSendEmail">Send Email</span>
+      </button>
+      <button class="edit-profile-btn" onclick="window.location.href='tel:9440617289'" style="flex: 1; background: #22c55e;" id="hCallNowBtn">
+        <i class="fas fa-phone"></i> <span id="hCallNow">Call Now</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- LOGIN PAGE -->
+<!-- ============================================ -->
+<div class="auth-page" id="loginPage">
+  <div class="auth-box">
+    <div class="logo">
+      <i class="fas fa-graduation-cap"></i>
+      <h2 id="loginTitle">LearnMateAI</h2>
+      <p id="loginSubtitle">Welcome Back</p>
+    </div>
+    <div id="loginMessage"></div>
+    <form id="loginForm">
+      <div class="input-box">
+        <input type="email" placeholder="Email Address" id="loginEmail" required>
+      </div>
+      <div class="input-box">
+        <input type="password" placeholder="Password" id="loginPassword" required>
+        <i class="fas fa-eye toggle-password" id="loginTogglePassword"></i>
+      </div>
+      <div class="options">
+        <label>
+          <input type="checkbox"> <span id="loginRemember">Remember me</span>
+        </label>
+        <a href="#" id="loginForgot">Forgot Password?</a>
+      </div>
+      <button type="submit" class="auth-btn" id="loginBtn">
+        <i class="fas fa-right-to-bracket"></i> <span id="loginBtnText">Login</span>
+      </button>
+      <div class="auth-switch-text">
+        <span id="loginSwitchText">Don't have an account?</span> <a id="showSignup"><span id="loginCreateLink">Create Account</span></a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SIGNUP PAGE -->
+<!-- ============================================ -->
+<div class="auth-page" id="signupPage">
+  <div class="auth-box">
+    <div class="logo">
+      <i class="fas fa-graduation-cap"></i>
+      <h2 id="signupTitle">LearnMateAI</h2>
+      <p id="signupSubtitle">Create Your Account</p>
+    </div>
+    <div id="signupMessage"></div>
+    <form id="signupForm">
+      <div class="input-box">
+        <input type="text" placeholder="Full Name" id="signupName" required>
+      </div>
+      <div class="input-box">
+        <input type="email" placeholder="Email Address" id="signupEmail" required>
+      </div>
+      <div class="input-box">
+        <input type="password" placeholder="Password" id="signupPassword" required>
+        <i class="fas fa-eye toggle-password" id="signupTogglePassword"></i>
+      </div>
+      <div class="input-box">
+        <input type="password" placeholder="Confirm Password" id="signupConfirmPassword" required>
+      </div>
+      <button type="submit" class="auth-btn" id="signupBtn">
+        <i class="fas fa-user-plus"></i> <span id="signupBtnText">Create Account</span>
+      </button>
+      <div class="auth-switch-text">
+        <span id="signupSwitchText">Already have an account?</span> <a id="showLogin"><span id="signupLoginLink">Sign In</span></a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ============================================
+    // TRANSLATIONS
+    // ============================================
+    const translations = {
+      en: {
+        // Dashboard
+        'logoutText': 'Logout',
+        'featureAIChat': 'AI Chat',
+        'featureDocumentUpload': 'Document Upload',
+        'featureSmartNotes': 'Smart Notes',
+        'featurePlanner': 'Planner',
+        'featureTeamWorkspace': 'Team Workspace',
+        'featureQuizz': 'Quizz',
+        'statPapers': 'papers',
+        'statWeek': 'this week',
+        'statMembers': 'team members',
+        'taskDue': '2 tasks due · planner',
+        'responsiveText': 'responsive',
+        'glassText': 'glassmorphism',
+        'darklightText': 'dark/light',
+        
+        // Feature Dashboards
+        'fdAIChat': 'AI Chat',
+        'fdNewChat': 'New Chat',
+        'fdNewChatDesc': 'Start a new conversation',
+        'fdChatHistory': 'Chat History',
+        'fdChatHistoryDesc': 'View past conversations',
+        'fdExportChat': 'Export Chat',
+        'fdExportChatDesc': 'Download conversation',
+        'fdDocumentUpload': 'Document Upload',
+        'fdUploadDoc': 'Upload Document',
+        'fdUploadDocDesc': 'Upload PDF, DOC, TXT',
+        'fdMyDocs': 'My Documents',
+        'fdMyDocsDesc': 'View uploaded files',
+        'fdDocAnalysis': 'Document Analysis',
+        'fdDocAnalysisDesc': 'AI-powered analysis',
+        'fdSmartNotes': 'Smart Notes',
+        'fdCreateNote': 'Create Note',
+        'fdCreateNoteDesc': 'Write a new note',
+        'fdAllNotes': 'All Notes',
+        'fdAllNotesDesc': 'View all your notes',
+        'fdAISummary': 'AI Summarize',
+        'fdAISummaryDesc': 'Summarize your notes',
+        'fdPlanner': 'Planner',
+        'fdAddTask': 'Add Task',
+        'fdAddTaskDesc': 'Create a new task',
+        'fdMyTasks': 'My Tasks',
+        'fdMyTasksDesc': 'View all tasks',
+        'fdCalendarView': 'Calendar View',
+        'fdCalendarViewDesc': 'See tasks on calendar',
+        'fdReminders': 'Reminders',
+        'fdRemindersDesc': 'Set task reminders',
+        'fdTeamWorkspace': 'Team Workspace',
+        'fdInviteMembers': 'Invite Members',
+        'fdInviteMembersDesc': 'Add team members',
+        'fdTeamRoster': 'Team Roster',
+        'fdTeamRosterDesc': 'View all members',
+        'fdProjectBoard': 'Project Board',
+        'fdProjectBoardDesc': 'Manage projects',
+        'fdTeamChat': 'Team Chat',
+        'fdTeamChatDesc': 'Communicate with team',
+        'fdQuizz': 'Quizz',
+        'fdCreateQuiz': 'Create Quiz',
+        'fdCreateQuizDesc': 'Make a new quiz',
+        'fdMyQuizzes': 'My Quizzes',
+        'fdMyQuizzesDesc': 'View all quizzes',
+        'fdTakeQuiz': 'Take Quiz',
+        'fdTakeQuizDesc': 'Start a quiz session',
+        'fdResults': 'Results & Analytics',
+        'fdResultsDesc': 'View your performance',
+
+        // Profile Modal
+        'pPapers': 'Papers',
+        'pProjects': 'Projects',
+        'pStudyTime': 'Study Time',
+        'pEditProfile': 'Edit Profile',
+        'pAccountSettings': 'Account Settings',
+        'pNotifications': 'Notifications',
+        'pPrivacy': 'Privacy & Security',
+        'pTheme': 'Theme Customization',
+        'pHelpSupport': 'Help & Support',
+        'pLogout': 'Logout',
+
+        // Edit Profile
+        'epTitle': 'Edit Profile',
+        'epProfilePic': 'Profile Picture',
+        'epClickUpload': 'Click to upload from gallery',
+        'epFileTypes': 'PNG, JPG, GIF up to 5MB',
+        'epFirstName': 'First Name',
+        'epLastName': 'Last Name',
+        'epFullName': 'Full Name (Display)',
+        'epBio': 'Bio',
+        'epSave': 'Save Changes',
+        'epCancel': 'Cancel',
+
+        // Settings
+        'sTitle': 'Account Settings',
+        'sChangePassword': 'Change Password',
+        'sEmailPrefs': 'Email Preferences',
+        'sTwoFactor': 'Two-Factor Authentication',
+        'sLanguage': 'Language',
+        'sTimezone': 'Timezone',
+        'sDeleteAccount': 'Delete Account',
+
+        // Help & Support
+        'hTitle': 'Help & Support',
+        'hNameLabel': 'Name',
+        'hEmailLabel': 'Email',
+        'hPhoneLabel': 'Phone',
+        'hHoursLabel': 'Hours',
+        'hHoursValue': '24/7 Available',
+        'hResponseLabel': 'Response',
+        'hResponseValue': 'Within 24 hours',
+        'hSendEmail': 'Send Email',
+        'hCallNow': 'Call Now',
+
+        // Login
+        'loginTitle': 'LearnMateAI',
+        'loginSubtitle': 'Welcome Back',
+        'loginRemember': 'Remember me',
+        'loginForgot': 'Forgot Password?',
+        'loginBtnText': 'Login',
+        'loginSwitchText': "Don't have an account?",
+        'loginCreateLink': 'Create Account',
+
+        // Signup
+        'signupTitle': 'LearnMateAI',
+        'signupSubtitle': 'Create Your Account',
+        'signupBtnText': 'Create Account',
+        'signupSwitchText': 'Already have an account?',
+        'signupLoginLink': 'Sign In'
+      },
+      te: {
+        'logoutText': 'నిష్క్రమించు',
+        'featureAIChat': 'AI చాట్',
+        'featureDocumentUpload': 'డాక్యుమెంట్ అప్లోడ్',
+        'featureSmartNotes': 'స్మార్ట్ నోట్స్',
+        'featurePlanner': 'ప్లానర్',
+        'featureTeamWorkspace': 'టీమ్ వర్క్స్పేస్',
+        'featureQuizz': 'క్విజ్',
+        'statPapers': 'పేపర్లు',
+        'statWeek': 'ఈ వారం',
+        'statMembers': 'టీమ్ సభ్యులు',
+        'taskDue': '2 పనులు పెండింగ్ · ప్లానర్',
+        'responsiveText': 'రెస్పాన్సివ్',
+        'glassText': 'గ్లాస్మార్ఫిజం',
+        'darklightText': 'డార్క్/లైట్',
+
+        'fdAIChat': 'AI చాట్',
+        'fdNewChat': 'కొత్త చాట్',
+        'fdNewChatDesc': 'కొత్త సంభాషణ ప్రారంభించండి',
+        'fdChatHistory': 'చాట్ చరిత్ర',
+        'fdChatHistoryDesc': 'పాత సంభాషణలు చూడండి',
+        'fdExportChat': 'చాట్ ఎగుమతి',
+        'fdExportChatDesc': 'సంభాషణ డౌన్లోడ్ చేయండి',
+        'fdDocumentUpload': 'డాక్యుమెంట్ అప్లోడ్',
+        'fdUploadDoc': 'డాక్యుమెంట్ అప్లోడ్ చేయండి',
+        'fdUploadDocDesc': 'PDF, DOC, TXT అప్లోడ్ చేయండి',
+        'fdMyDocs': 'నా డాక్యుమెంట్లు',
+        'fdMyDocsDesc': 'అప్లోడ్ చేసిన ఫైల్స్ చూడండి',
+        'fdDocAnalysis': 'డాక్యుమెంట్ విశ్లేషణ',
+        'fdDocAnalysisDesc': 'AI ఆధారిత విశ్లేషణ',
+        'fdSmartNotes': 'స్మార్ట్ నోట్స్',
+        'fdCreateNote': 'నోట్ సృష్టించండి',
+        'fdCreateNoteDesc': 'కొత్త నోట్ రాయండి',
+        'fdAllNotes': 'అన్ని నోట్స్',
+        'fdAllNotesDesc': 'మీ అన్ని నోట్స్ చూడండి',
+        'fdAISummary': 'AI సారాంశం',
+        'fdAISummaryDesc': 'మీ నోట్స్ సారాంశం',
+        'fdPlanner': 'ప్లానర్',
+        'fdAddTask': 'పని జోడించండి',
+        'fdAddTaskDesc': 'కొత్త పని సృష్టించండి',
+        'fdMyTasks': 'నా పనులు',
+        'fdMyTasksDesc': 'అన్ని పనులు చూడండి',
+        'fdCalendarView': 'క్యాలెండర్ వీక్షణ',
+        'fdCalendarViewDesc': 'క్యాలెండర్‌లో పనులు చూడండి',
+        'fdReminders': 'రిమైండర్లు',
+        'fdRemindersDesc': 'పనులకు రిమైండర్లు సెట్ చేయండి',
+        'fdTeamWorkspace': 'టీమ్ వర్క్స్పేస్',
+        'fdInviteMembers': 'సభ్యులను ఆహ్వానించండి',
+        'fdInviteMembersDesc': 'టీమ్ సభ్యులను జోడించండి',
+        'fdTeamRoster': 'టీమ్ రోస్టర్',
+        'fdTeamRosterDesc': 'అన్ని సభ్యులను చూడండి',
+        'fdProjectBoard': 'ప్రాజెక్ట్ బోర్డు',
+        'fdProjectBoardDesc': 'ప్రాజెక్ట్లు నిర్వహించండి',
+        'fdTeamChat': 'టీమ్ చాట్',
+        'fdTeamChatDesc': 'టీమ్‌తో సంభాషించండి',
+        'fdQuizz': 'క్విజ్',
+        'fdCreateQuiz': 'క్విజ్ సృష్టించండి',
+        'fdCreateQuizDesc': 'కొత్త క్విజ్ చేయండి',
+        'fdMyQuizzes': 'నా క్విజ్‌లు',
+        'fdMyQuizzesDesc': 'అన్ని క్విజ్‌లు చూడండి',
+        'fdTakeQuiz': 'క్విజ్ తీసుకోండి',
+        'fdTakeQuizDesc': 'క్విజ్ సెషన్ ప్రారంభించండి',
+        'fdResults': 'ఫలితాలు & విశ్లేషణ',
+        'fdResultsDesc': 'మీ పనితీరు చూడండి',
+
+        'pPapers': 'పేపర్లు',
+        'pProjects': 'ప్రాజెక్ట్లు',
+        'pStudyTime': 'చదువు సమయం',
+        'pEditProfile': 'ప్రొఫైల్ సవరించండి',
+        'pAccountSettings': 'అకౌంట్ సెట్టింగ్స్',
+        'pNotifications': 'నోటిఫికేషన్లు',
+        'pPrivacy': 'గోప్యత & భద్రత',
+        'pTheme': 'థీమ్ అనుకూలీకరణ',
+        'pHelpSupport': 'సహాయం & మద్దతు',
+        'pLogout': 'నిష్క్రమించు',
+
+        'epTitle': 'ప్రొఫైల్ సవరించండి',
+        'epProfilePic': 'ప్రొఫైల్ చిత్రం',
+        'epClickUpload': 'గ్యాలరీ నుండి అప్లోడ్ చేయడానికి క్లిక్ చేయండి',
+        'epFileTypes': 'PNG, JPG, GIF 5MB వరకు',
+        'epFirstName': 'మొదటి పేరు',
+        'epLastName': 'చివరి పేరు',
+        'epFullName': 'పూర్తి పేరు (ప్రదర్శన)',
+        'epBio': 'బయో',
+        'epSave': 'మార్పులు సేవ్ చేయండి',
+        'epCancel': 'రద్దు చేయండి',
+
+        'sTitle': 'అకౌంట్ సెట్టింగ్స్',
+        'sChangePassword': 'పాస్వర్డ్ మార్చండి',
+        'sEmailPrefs': 'ఇమెయిల్ ప్రాధాన్యతలు',
+        'sTwoFactor': 'టూ-ఫ్యాక్టర్ ఆథెంటికేషన్',
+        'sLanguage': 'భాష',
+        'sTimezone': 'టైమ్‌జోన్',
+        'sDeleteAccount': 'అకౌంట్ తొలగించండి',
+
+        'hTitle': 'సహాయం & మద్దతు',
+        'hNameLabel': 'పేరు',
+        'hEmailLabel': 'ఇమెయిల్',
+        'hPhoneLabel': 'ఫోన్',
+        'hHoursLabel': 'సమయాలు',
+        'hHoursValue': '24/7 అందుబాటులో',
+        'hResponseLabel': 'ప్రతిస్పందన',
+        'hResponseValue': '24 గంటలలోపు',
+        'hSendEmail': 'ఇమెయిల్ పంపండి',
+        'hCallNow': 'ఇప్పుడే కాల్ చేయండి',
+
+        'loginTitle': 'LearnMateAI',
+        'loginSubtitle': 'తిరిగి స్వాగతం',
+        'loginRemember': 'నన్ను గుర్తుంచుకో',
+        'loginForgot': 'పాస్వర్డ్ మర్చిపోయారా?',
+        'loginBtnText': 'లాగిన్',
+        'loginSwitchText': 'ఖాతా లేదా?',
+        'loginCreateLink': 'ఖాతా సృష్టించండి',
+
+        'signupTitle': 'LearnMateAI',
+        'signupSubtitle': 'మీ ఖాతా సృష్టించండి',
+        'signupBtnText': 'ఖాతా సృష్టించండి',
+        'signupSwitchText': 'ఇప్పటికే ఖాతా ఉందా?',
+        'signupLoginLink': 'సైన్ ఇన్'
+      },
+      hi: {
+        'logoutText': 'लॉगआउट',
+        'featureAIChat': 'AI चैट',
+        'featureDocumentUpload': 'दस्तावेज़ अपलोड',
+        'featureSmartNotes': 'स्मार्ट नोट्स',
+        'featurePlanner': 'प्लानर',
+        'featureTeamWorkspace': 'टीम वर्कस्पेस',
+        'featureQuizz': 'क्विज़',
+        'statPapers': 'पेपर्स',
+        'statWeek': 'इस सप्ताह',
+        'statMembers': 'टीम सदस्य',
+        'taskDue': '2 कार्य बाकी · प्लानर',
+        'responsiveText': 'रिस्पॉन्सिव',
+        'glassText': 'ग्लासमोर्फिज्म',
+        'darklightText': 'डार्क/लाइट',
+
+        'fdAIChat': 'AI चैट',
+        'fdNewChat': 'नई चैट',
+        'fdNewChatDesc': 'नई बातचीत शुरू करें',
+        'fdChatHistory': 'चैट इतिहास',
+        'fdChatHistoryDesc': 'पुरानी बातचीत देखें',
+        'fdExportChat': 'चैट निर्यात करें',
+        'fdExportChatDesc': 'बातचीत डाउनलोड करें',
+        'fdDocumentUpload': 'दस्तावेज़ अपलोड',
+        'fdUploadDoc': 'दस्तावेज़ अपलोड करें',
+        'fdUploadDocDesc': 'PDF, DOC, TXT अपलोड करें',
+        'fdMyDocs': 'मेरे दस्तावेज़',
+        'fdMyDocsDesc': 'अपलोड की गई फ़ाइलें देखें',
+        'fdDocAnalysis': 'दस्तावेज़ विश्लेषण',
+        'fdDocAnalysisDesc': 'AI-संचालित विश्लेषण',
+        'fdSmartNotes': 'स्मार्ट नोट्स',
+        'fdCreateNote': 'नोट बनाएं',
+        'fdCreateNoteDesc': 'नया नोट लिखें',
+        'fdAllNotes': 'सभी नोट्स',
+        'fdAllNotesDesc': 'अपने सभी नोट्स देखें',
+        'fdAISummary': 'AI सारांश',
+        'fdAISummaryDesc': 'अपने नोट्स का सारांश बनाएं',
+        'fdPlanner': 'प्लानर',
+        'fdAddTask': 'कार्य जोड़ें',
+        'fdAddTaskDesc': 'नया कार्य बनाएं',
+        'fdMyTasks': 'मेरे कार्य',
+        'fdMyTasksDesc': 'सभी कार्य देखें',
+        'fdCalendarView': 'कैलेंडर दृश्य',
+        'fdCalendarViewDesc': 'कैलेंडर पर कार्य देखें',
+        'fdReminders': 'रिमाइंडर',
+        'fdRemindersDesc': 'कार्यों के लिए रिमाइंडर सेट करें',
+        'fdTeamWorkspace': 'टीम वर्कस्पेस',
+        'fdInviteMembers': 'सदस्यों को आमंत्रित करें',
+        'fdInviteMembersDesc': 'टीम सदस्य जोड़ें',
+        'fdTeamRoster': 'टीम रोस्टर',
+        'fdTeamRosterDesc': 'सभी सदस्य देखें',
+        'fdProjectBoard': 'प्रोजेक्ट बोर्ड',
+        'fdProjectBoardDesc': 'प्रोजेक्ट प्रबंधित करें',
+        'fdTeamChat': 'टीम चैट',
+        'fdTeamChatDesc': 'टीम से संवाद करें',
+        'fdQuizz': 'क्विज़',
+        'fdCreateQuiz': 'क्विज़ बनाएं',
+        'fdCreateQuizDesc': 'नई क्विज़ बनाएं',
+        'fdMyQuizzes': 'मेरी क्विज़',
+        'fdMyQuizzesDesc': 'सभी क्विज़ देखें',
+        'fdTakeQuiz': 'क्विज़ लें',
+        'fdTakeQuizDesc': 'क्विज़ सत्र शुरू करें',
+        'fdResults': 'परिणाम और विश्लेषण',
+        'fdResultsDesc': 'अपना प्रदर्शन देखें',
+
+        'pPapers': 'पेपर्स',
+        'pProjects': 'प्रोजेक्ट्स',
+        'pStudyTime': 'अध्ययन समय',
+        'pEditProfile': 'प्रोफ़ाइल संपादित करें',
+        'pAccountSettings': 'खाता सेटिंग्स',
+        'pNotifications': 'सूचनाएं',
+        'pPrivacy': 'गोपनीयता और सुरक्षा',
+        'pTheme': 'थीम अनुकूलन',
+        'pHelpSupport': 'सहायता और समर्थन',
+        'pLogout': 'लॉगआउट',
+
+        'epTitle': 'प्रोफ़ाइल संपादित करें',
+        'epProfilePic': 'प्रोफ़ाइल चित्र',
+        'epClickUpload': 'गैलरी से अपलोड करने के लिए क्लिक करें',
+        'epFileTypes': 'PNG, JPG, GIF 5MB तक',
+        'epFirstName': 'पहला नाम',
+        'epLastName': 'अंतिम नाम',
+        'epFullName': 'पूरा नाम (प्रदर्शन)',
+        'epBio': 'जीवन परिचय',
+        'epSave': 'परिवर्तन सहेजें',
+        'epCancel': 'रद्द करें',
+
+        'sTitle': 'खाता सेटिंग्स',
+        'sChangePassword': 'पासवर्ड बदलें',
+        'sEmailPrefs': 'ईमेल प्राथमिकताएं',
+        'sTwoFactor': 'दो-कारक प्रमाणीकरण',
+        'sLanguage': 'भाषा',
+        'sTimezone': 'समय क्षेत्र',
+        'sDeleteAccount': 'खाता हटाएं',
+
+        'hTitle': 'सहायता और समर्थन',
+        'hNameLabel': 'नाम',
+        'hEmailLabel': 'ईमेल',
+        'hPhoneLabel': 'फोन',
+        'hHoursLabel': 'समय',
+        'hHoursValue': '24/7 उपलब्ध',
+        'hResponseLabel': 'प्रतिक्रिया',
+        'hResponseValue': '24 घंटे के भीतर',
+        'hSendEmail': 'ईमेल भेजें',
+        'hCallNow': 'अभी कॉल करें',
+
+        'loginTitle': 'LearnMateAI',
+        'loginSubtitle': 'वापसी पर स्वागत है',
+        'loginRemember': 'मुझे याद रखें',
+        'loginForgot': 'पासवर्ड भूल गए?',
+        'loginBtnText': 'लॉगिन',
+        'loginSwitchText': 'खाता नहीं है?',
+        'loginCreateLink': 'खाता बनाएं',
+
+        'signupTitle': 'LearnMateAI',
+        'signupSubtitle': 'अपना खाता बनाएं',
+        'signupBtnText': 'खाता बनाएं',
+        'signupSwitchText': 'पहले से खाता है?',
+        'signupLoginLink': 'साइन इन'
+      }
+    };
+
+    // ============================================
+    // LANGUAGE MANAGEMENT
+    // ============================================
+    let currentLanguage = localStorage.getItem('language') || 'en';
+
+    function applyLanguage(lang) {
+      const t = translations[lang];
+      if (!t) return;
+
+      const elements = document.querySelectorAll('[id]');
+      elements.forEach(el => {
+        const id = el.id;
+        if (t[id] !== undefined) {
+          if (el.tagName === 'SPAN' || el.tagName === 'DIV' || el.tagName === 'P' || el.tagName === 'H2' || el.tagName === 'H4' || el.tagName === 'BUTTON' || el.tagName === 'LABEL') {
+            el.textContent = t[id];
+          }
+        }
+      });
+
+      const settingsSelector = document.getElementById('settingsLanguageSelect');
+      if (settingsSelector) settingsSelector.value = lang;
+
+      localStorage.setItem('language', lang);
+      currentLanguage = lang;
+    }
+
+    // ============================================
+    // LANGUAGE SELECTOR EVENT
+    // ============================================
+    document.getElementById('settingsLanguageSelect').addEventListener('change', function() {
+      applyLanguage(this.value);
+    });
+
+    // ============================================
+    // ELEMENTS
+    // ============================================
+    const dashboardPage = document.getElementById('dashboardPage');
+    const loginPage = document.getElementById('loginPage');
+    const signupPage = document.getElementById('signupPage');
+    // ============================================
+    // BACKEND API CONFIG
+    // ============================================
+    const API_BASE = '/api';
+
+    function getAuthToken() {
+      return localStorage.getItem('authToken');
+    }
+
+    function authHeaders() {
+      const token = getAuthToken();
+      return token ? { 'Authorization': 'Bearer ' + token } : {};
+    }
+
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const showSignup = document.getElementById('showSignup');
+    const showLogin = document.getElementById('showLogin');
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+    const body = document.body;
+
+    // Profile modal elements
+    const profileModal = document.getElementById('profileModal');
+    const profileAvatar = document.getElementById('profileAvatar');
+    const profileAvatarLarge = document.getElementById('profileAvatarLarge');
+    const avatarInitial = document.getElementById('avatarInitial');
+    const profileNameDisplay = document.getElementById('profileNameDisplay');
+    const profileEmailDisplay = document.getElementById('profileEmailDisplay');
+    const profileBioDisplay = document.getElementById('profileBioDisplay');
+    const closeProfileModal = document.getElementById('closeProfileModal');
+    const profileLogoutBtn = document.getElementById('profileLogoutBtn');
+    const editProfileBtn = document.getElementById('editProfileBtn');
+    const accountSettingsBtn = document.getElementById('accountSettingsBtn');
+    const helpSupportBtn = document.getElementById('helpSupportBtn');
+
+    // Edit profile elements
+    const editProfileModal = document.getElementById('editProfileModal');
+    const closeEditProfile = document.getElementById('closeEditProfile');
+    const cancelEditProfile = document.getElementById('cancelEditProfile');
+    const editProfileForm = document.getElementById('editProfileForm');
+    const editFirstName = document.getElementById('editFirstName');
+    const editLastName = document.getElementById('editLastName');
+    const editFullName = document.getElementById('editFullName');
+    const editBio = document.getElementById('editBio');
+    const profilePicUpload = document.getElementById('profilePicUpload');
+    const profilePicInput = document.getElementById('profilePicInput');
+    const profilePicPreview = document.getElementById('profilePicPreview');
+    const picPreviewInitial = document.getElementById('picPreviewInitial');
+
+    // Settings modal
+    const settingsModal = document.getElementById('settingsModal');
+    const closeSettings = document.getElementById('closeSettings');
+    const settingsIconBtn = document.getElementById('settingsIconBtn');
+
+    // Help modal
+    const helpModal = document.getElementById('helpModal');
+    const closeHelp = document.getElementById('closeHelp');
+
+    // Password toggle elements
+    const loginTogglePassword = document.getElementById('loginTogglePassword');
+    const signupTogglePassword = document.getElementById('signupTogglePassword');
+    const loginPassword = document.getElementById('loginPassword');
+    const signupPassword = document.getElementById('signupPassword');
+
+    // Message containers
+    const loginMessage = document.getElementById('loginMessage');
+    const signupMessage = document.getElementById('signupMessage');
+
+    let profilePictureData = null;
+
+    // ============================================
+    // PASSWORD TOGGLE FUNCTIONS
+    // ============================================
+    function togglePasswordVisibility(input, toggleIcon) {
+      const isPassword = input.getAttribute('type') === 'password';
+      input.setAttribute('type', isPassword ? 'text' : 'password');
+      toggleIcon.classList.toggle('fa-eye');
+      toggleIcon.classList.toggle('fa-eye-slash');
+    }
+
+    loginTogglePassword.addEventListener('click', function(e) {
+      e.stopPropagation();
+      togglePasswordVisibility(loginPassword, this);
+    });
+
+    signupTogglePassword.addEventListener('click', function(e) {
+      e.stopPropagation();
+      togglePasswordVisibility(signupPassword, this);
+    });
+
+    // ============================================
+    // TOAST & MESSAGE FUNCTIONS
+    // ============================================
+    function showMessage(element, message, type) {
+      element.innerHTML = `<div class="${type}-msg">${message}</div>`;
+      setTimeout(() => {
+        element.innerHTML = '';
+      }, 3000);
+    }
+
+    function showToast(message) {
+      const existing = document.querySelector('.toast');
+      if (existing) existing.remove();
+      
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
+
+    // ============================================
+    // AUTH FUNCTIONS
+    // ============================================
+    function switchToLogin() {
+      loginPage.classList.add('active');
+      loginPage.style.display = 'flex';
+      signupPage.classList.remove('active');
+      signupPage.style.display = 'none';
+      dashboardPage.classList.add('hidden');
+    }
+
+    function switchToSignup() {
+      signupPage.classList.add('active');
+      signupPage.style.display = 'flex';
+      loginPage.classList.remove('active');
+      loginPage.style.display = 'none';
+      dashboardPage.classList.add('hidden');
+    }
+
+    function showDashboard() {
+      dashboardPage.classList.remove('hidden');
+      loginPage.classList.remove('active');
+      loginPage.style.display = 'none';
+      signupPage.classList.remove('active');
+      signupPage.style.display = 'none';
+    }
+
+    // ============================================
+    // FEATURE DASHBOARD FUNCTIONS
+    // ============================================
+    window.openFeatureDashboard = function(featureId) {
+      const dashboard = document.getElementById(featureId);
+      if (dashboard) {
+        dashboard.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    window.closeFeatureDashboard = function(featureId) {
+      const dashboard = document.getElementById(featureId);
+      if (dashboard) {
+        dashboard.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      }
+    }
+
+    // Feature card click handlers
+    document.querySelectorAll('.glass-card[data-feature]').forEach(card => {
+      card.addEventListener('click', function() {
+        const feature = this.dataset.feature;
+        const featureMap = {
+          'ai-chat': 'aiChatDashboard',
+          'document-upload': 'documentUploadDashboard',
+          'smart-notes': 'smartNotesDashboard',
+          'planner': 'plannerDashboard',
+          'team-workspace': 'teamWorkspaceDashboard',
+          'quizz': 'quizzDashboard'
+        };
+        const dashboardId = featureMap[feature];
+        if (dashboardId) {
+          openFeatureDashboard(dashboardId);
+        }
+      });
+    });
+
+    // ============================================
+    // PROFILE FUNCTIONS
+    // ============================================
+    async function loadProfileData() {
+      let userData = null;
+      try {
+        const response = await fetch(`${API_BASE}/auth/profile`, {
+          method: 'GET',
+          headers: authHeaders()
+        });
+        const result = await response.json();
+        if (response.ok && result.success) {
+          userData = result.user;
+        } else if (response.status === 401) {
+          // token expired or invalid - send back to login
+          handleLogout();
+          return;
+        }
+      } catch (err) {
+        console.error('Could not load profile from server:', err);
+      }
+      const userEmail = localStorage.getItem('userEmail');
+      
+      if (userData) {
+        const fullName = userData.fullName || 'User';
+        const firstName = userData.firstName || '';
+        const lastName = userData.lastName || '';
+        const bio = userData.bio || 'Passionate learner & tech enthusiast';
+        const profilePic = userData.profilePic || null;
+
+        const displayName = fullName || (firstName + ' ' + lastName).trim() || 'User';
+        profileNameDisplay.textContent = displayName;
+        profileEmailDisplay.textContent = userEmail || 'user@example.com';
+        profileBioDisplay.textContent = bio;
+
+        if (profilePic) {
+          avatarInitial.style.display = 'none';
+          const img = document.createElement('img');
+          img.src = profilePic;
+          img.alt = 'Profile';
+          const existingImg = profileAvatarLarge.querySelector('img');
+          if (existingImg) existingImg.remove();
+          profileAvatarLarge.appendChild(img);
+        } else {
+          const existingImg = profileAvatarLarge.querySelector('img');
+          if (existingImg) existingImg.remove();
+          avatarInitial.style.display = 'flex';
+          avatarInitial.textContent = displayName.charAt(0).toUpperCase();
+        }
+
+        if (profilePic) {
+          const headerImg = profileAvatar.querySelector('img');
+          if (!headerImg) {
+            const img = document.createElement('img');
+            img.src = profilePic;
+            img.alt = 'Profile';
+            profileAvatar.innerHTML = '';
+            profileAvatar.appendChild(img);
+          } else {
+            headerImg.src = profilePic;
+          }
+        } else {
+          const headerImg = profileAvatar.querySelector('img');
+          if (headerImg) {
+            profileAvatar.innerHTML = displayName.charAt(0).toUpperCase();
+          } else {
+            profileAvatar.textContent = displayName.charAt(0).toUpperCase();
+          }
+        }
+      }
+    }
+
+    function getUserProfile(email) {
+      const users = getUsers();
+      return users.find(u => u.email === email) || null;
+    }
+
+    function updateUserProfile(email, updates) {
+      const users = getUsers();
+      const index = users.findIndex(u => u.email === email);
+      if (index !== -1) {
+        users[index] = { ...users[index], ...updates };
+        saveUsers(users);
+        return true;
+      }
+      return false;
+    }
+
+    // ============================================
+    // USER DATA MANAGEMENT
+    // ============================================
+    function getUsers() {
+      const users = localStorage.getItem('users');
+      return users ? JSON.parse(users) : [];
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+
+    function findUser(email) {
+      const users = getUsers();
+      return users.find(user => user.email === email);
+    }
+
+    function createUser(name, email, password) {
+      const users = getUsers();
+      users.push({ 
+        name, 
+        email, 
+        password,
+        fullName: name,
+        firstName: '',
+        lastName: '',
+        bio: 'Passionate learner & tech enthusiast',
+        profilePic: null
+      });
+      saveUsers(users);
+    }
+
+    // ============================================
+    // PROFILE MODAL FUNCTIONS
+    // ============================================
+    function openProfileModal() {
+      loadProfileData();
+      profileModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeProfileModalFunc() {
+      profileModal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    async function openEditProfile() {
+      let userData = null;
+      try {
+        const res = await apiFetch('/auth/profile');
+        const result = await res.json();
+        if (result.success) userData = result.user;
+      } catch (e) { console.error(e); }
+
+      if (userData) {
+        editFirstName.value = userData.firstName || '';
+        editLastName.value = userData.lastName || '';
+        editFullName.value = userData.fullName || '';
+        editBio.value = userData.bio || '';
+
+        if (userData.profilePic) {
+          const img = document.createElement('img');
+          img.src = userData.profilePic;
+          img.alt = 'Profile';
+          picPreviewInitial.style.display = 'none';
+          const existingImg = profilePicPreview.querySelector('img');
+          if (existingImg) existingImg.remove();
+          profilePicPreview.appendChild(img);
+        } else {
+          picPreviewInitial.style.display = 'flex';
+          picPreviewInitial.textContent = (userData.fullName || 'U').charAt(0).toUpperCase();
+        }
+
+        closeProfileModalFunc();
+        editProfileModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      } else {
+        showToast('Could not load profile. Please try again.');
+      }
+    }
+
+    function closeEditProfileFunc() {
+      editProfileModal.classList.remove('active');
+      profilePicInput.value = '';
+      openProfileModal();
+    }
+
+    function closeEditProfileModalOnly() {
+      editProfileModal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+      profilePicInput.value = '';
+    }
+
+    // ============================================
+    // SETTINGS MODAL FUNCTIONS
+    // ============================================
+    function openSettingsModal() {
+      settingsModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSettingsModal() {
+      settingsModal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    // ============================================
+    // HELP MODAL FUNCTIONS
+    // ============================================
+    function openHelpModal() {
+      closeProfileModalFunc();
+      helpModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeHelpModal() {
+      helpModal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    // ============================================
+    // SIGNUP HANDLER
+    // ============================================
+    signupForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('signupName').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const password = document.getElementById('signupPassword').value;
+      const confirmPassword = document.getElementById('signupConfirmPassword').value;
+
+      if (!name || !email || !password || !confirmPassword) {
+        showMessage(signupMessage, 'Please fill in all fields', 'error');
+        return;
+      }
+
+      if (password.length < 6) {
+        showMessage(signupMessage, 'Password must be at least 6 characters', 'error');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showMessage(signupMessage, 'Passwords do not match', 'error');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/auth/signup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fullName: name, email: email, password: password })
+        });
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          showMessage(signupMessage, result.message || 'Signup failed. Please try again.', 'error');
+          return;
+        }
+
+        showMessage(signupMessage, result.message || 'Account created successfully! Please login.', 'success');
+        signupForm.reset();
+
+        setTimeout(() => {
+          switchToLogin();
+        }, 1500);
+      } catch (err) {
+        showMessage(signupMessage, 'Could not reach the server. Is the backend running?', 'error');
+        console.error('Signup error:', err);
+      }
+    });
+
+    // ============================================
+    // LOGIN HANDLER
+    // ============================================
+    loginForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      if (!email || !password) {
+        showMessage(loginMessage, 'Please enter both email and password', 'error');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email, password: password })
+        });
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          showMessage(loginMessage, result.message || 'Login failed. Please try again.', 'error');
+          return;
+        }
+
+        localStorage.setItem('authToken', result.token);
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('userEmail', result.user.email);
+        localStorage.setItem('userName', result.user.fullName);
+
+        showDashboard();
+        await loadProfileData();
+        console.log('✅ Logged in as:', email);
+      } catch (err) {
+        showMessage(loginMessage, 'Could not reach the server. Is the backend running?', 'error');
+        console.error('Login error:', err);
+      }
+    });
+
+    // ============================================
+    // LOGOUT HANDLER
+    // ============================================
+    async function handleLogout() {
+      try {
+        await fetch(`${API_BASE}/auth/logout`, {
+          method: 'POST',
+          headers: authHeaders()
+        });
+      } catch (err) {
+        console.error('Logout request failed (continuing anyway):', err);
+      }
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('userEmail');
+      localStorage.removeItem('userName');
+      closeProfileModalFunc();
+      closeEditProfileModalOnly();
+      closeSettingsModal();
+      closeHelpModal();
+      switchToLogin();
+      console.log('👋 Logged out');
+    }
+
+    logoutBtn.addEventListener('click', handleLogout);
+    profileLogoutBtn.addEventListener('click', handleLogout);
+
+    // ============================================
+    // SWITCH BETWEEN LOGIN & SIGNUP
+    // ============================================
+    showSignup.addEventListener('click', function(e) {
+      e.preventDefault();
+      switchToSignup();
+      loginMessage.innerHTML = '';
+      signupMessage.innerHTML = '';
+    });
+
+    showLogin.addEventListener('click', function(e) {
+      e.preventDefault();
+      switchToLogin();
+      loginMessage.innerHTML = '';
+      signupMessage.innerHTML = '';
+    });
+
+    // ============================================
+    // PROFILE MODAL EVENTS
+    // ============================================
+    profileAvatar.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (localStorage.getItem('isLoggedIn') === 'true') {
+        openProfileModal();
+      }
+    });
+
+    closeProfileModal.addEventListener('click', closeProfileModalFunc);
+
+    profileModal.addEventListener('click', function(e) {
+      if (e.target === profileModal) {
+        closeProfileModalFunc();
+      }
+    });
+
+    // ============================================
+    // SETTINGS ICON EVENTS
+    // ============================================
+    settingsIconBtn.addEventListener('click', function() {
+      openSettingsModal();
+    });
+
+    // ============================================
+    // EDIT PROFILE EVENTS
+    // ============================================
+    editProfileBtn.addEventListener('click', openEditProfile);
+
+    closeEditProfile.addEventListener('click', closeEditProfileFunc);
+    cancelEditProfile.addEventListener('click', closeEditProfileFunc);
+
+    editProfileModal.addEventListener('click', function(e) {
+      if (e.target === editProfileModal) {
+        closeEditProfileFunc();
+      }
+    });
+
+    // Profile picture upload
+    profilePicUpload.addEventListener('click', function() {
+      profilePicInput.click();
+    });
+
+    profilePicInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          profilePictureData = event.target.result;
+          const img = document.createElement('img');
+          img.src = profilePictureData;
+          img.alt = 'Profile';
+          picPreviewInitial.style.display = 'none';
+          const existingImg = profilePicPreview.querySelector('img');
+          if (existingImg) existingImg.remove();
+          profilePicPreview.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Save profile changes
+    editProfileForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const firstName = editFirstName.value.trim();
+      const lastName = editLastName.value.trim();
+      const fullName = editFullName.value.trim() || (firstName + ' ' + lastName).trim() || 'User';
+      const bio = editBio.value.trim();
+
+      const updates = {
+        firstName: firstName,
+        lastName: lastName,
+        fullName: fullName,
+        bio: bio || 'Passionate learner & tech enthusiast'
+      };
+
+      if (profilePictureData) {
+        updates.profilePic = profilePictureData;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/auth/profile`, {
+          method: 'PUT',
+          headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders()),
+          body: JSON.stringify(updates)
+        });
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          localStorage.setItem('userName', fullName);
+          await loadProfileData();
+          closeEditProfileFunc();
+          showToast('Profile updated successfully!');
+          console.log('✅ Profile updated');
+        } else {
+          alert(result.message || 'Error updating profile. Please try again.');
+        }
+      } catch (err) {
+        alert('Could not reach the server. Is the backend running?');
+        console.error('Profile update error:', err);
+      }
+    });
+
+    // ============================================
+    // ACCOUNT SETTINGS EVENTS
+    // ============================================
+    accountSettingsBtn.addEventListener('click', function() {
+      closeProfileModalFunc();
+      openSettingsModal();
+    });
+
+    closeSettings.addEventListener('click', closeSettingsModal);
+
+    settingsModal.addEventListener('click', function(e) {
+      if (e.target === settingsModal) {
+        closeSettingsModal();
+      }
+    });
+
+    // ============================================
+    // HELP & SUPPORT EVENTS
+    // ============================================
+    helpSupportBtn.addEventListener('click', openHelpModal);
+
+    closeHelp.addEventListener('click', closeHelpModal);
+
+    helpModal.addEventListener('click', function(e) {
+      if (e.target === helpModal) {
+        closeHelpModal();
+      }
+    });
+
+    // ============================================
+    // KEYBOARD SHORTCUTS
+    // ============================================
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.feature-dashboard.active').forEach(d => {
+          d.classList.remove('active');
+          document.body.style.overflow = 'auto';
+        });
+        if (editProfileModal.classList.contains('active')) {
+          closeEditProfileFunc();
+        }
+        if (settingsModal.classList.contains('active')) {
+          closeSettingsModal();
+        }
+        if (helpModal.classList.contains('active')) {
+          closeHelpModal();
+        }
+        if (profileModal.classList.contains('active')) {
+          closeProfileModalFunc();
+        }
+      }
+    });
+
+    // ============================================
+    // CHECK LOGIN STATUS
+    // ============================================
+    async function checkAuth() {
+      const token = getAuthToken();
+      
+      if (token) {
+        showDashboard();
+        await loadProfileData();
+      } else {
+        switchToLogin();
+      }
+    }
+
+    // ============================================
+    // THEME TOGGLE
+    // ============================================
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme === 'dark') {
+      body.classList.add('dark');
+      themeIcon.className = 'fas fa-sun';
+      themeLabel.textContent = 'Light';
+    } else if (storedTheme === 'light') {
+      body.classList.remove('dark');
+      themeIcon.className = 'fas fa-moon';
+      themeLabel.textContent = 'Dark';
+    } else {
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        body.classList.add('dark');
+        themeIcon.className = 'fas fa-sun';
+        themeLabel.textContent = 'Light';
+        localStorage.setItem('theme', 'dark');
+      } else {
+        body.classList.remove('dark');
+        themeIcon.className = 'fas fa-moon';
+        themeLabel.textContent = 'Dark';
+        localStorage.setItem('theme', 'light');
+      }
+    }
+
+    themeToggle.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const isDark = body.classList.toggle('dark');
+      if (isDark) {
+        themeIcon.className = 'fas fa-sun';
+        themeLabel.textContent = 'Light';
+        localStorage.setItem('theme', 'dark');
+      } else {
+        themeIcon.className = 'fas fa-moon';
+        themeLabel.textContent = 'Dark';
+        localStorage.setItem('theme', 'light');
+      }
+    });
+
+    // ============================================
+    // SHARED API HELPER
+    // ============================================
+    function escapeHtml(str) {
+      const d = document.createElement('div');
+      d.textContent = str == null ? '' : String(str);
+      return d.innerHTML;
+    }
+
+    async function apiFetch(path, options) {
+      options = options || {};
+      options.headers = Object.assign({}, options.headers || {}, authHeaders());
+      const res = await fetch(`${API_BASE}${path}`, options);
+      if (res.status === 401) {
+        alert('Your session has expired. Please login again.');
+        handleLogout();
+        throw new Error('Unauthorized');
+      }
+      return res;
+    }
+
+    function fdBack(panelId, renderFn) {
+      return `<span class="fd-back-link" onclick="${renderFn}">&larr; Back</span>`;
+    }
+
+    function hideCardsFor(dashboardId) {
+      const dash = document.getElementById(dashboardId);
+      if (!dash) return;
+      const cards = dash.querySelector('.feature-cards');
+      if (cards) cards.style.display = 'none';
+    }
+
+    function showCardsAgain(dashboardId) {
+      const dash = document.getElementById(dashboardId);
+      if (!dash) return;
+      const cards = dash.querySelector('.feature-cards');
+      if (cards) cards.style.display = '';
+      const panel = dash.querySelector('.fd-panel');
+      if (panel) { panel.classList.add('hidden'); panel.innerHTML = ''; }
+    }
+    window.showCardsAgain = showCardsAgain;
+
+    function fdBackToCards(dashboardId) {
+      return `<span class="fd-back-link" onclick="showCardsAgain('${dashboardId}')">&larr; Back</span>`;
+    }
+
+    function renderChatText(value) {
+      const escaped = escapeHtml(value || '');
+      return escaped
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/^#{1,3}\s+(.+)$/gm, '<strong>$1</strong>')
+        .replace(/\n/g, '<br>');
+    }
+
+    // ============================================
+    // AI CHAT MODULE
+    // ============================================
+    const chatModule = {
+      currentChatId: null,
+      selectedImageDataUrl: null,
+      selectedImageName: '',
+
+      async startNewChat() {
+        try {
+          const res = await apiFetch('/chat/new', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({})
+          });
+          const data = await res.json();
+          if (data.success) {
+            this.openChat(data.chat.id, data.chat.title, 'cards');
+          } else {
+            showToast(data.message || 'Could not start chat');
+          }
+        } catch (e) { console.error(e); showToast('Could not reach server'); }
+      },
+
+      async showHistory() {
+        const panel = document.getElementById('chatPanel');
+        panel.classList.remove('hidden');
+        panel.innerHTML = '<div class="fd-empty">Loading...</div>';
+        try {
+          const res = await apiFetch('/chat/history');
+          const data = await res.json();
+          let html = fdBackToCards('aiChatDashboard');
+          if (!data.success) { panel.innerHTML = html + '<div class="fd-empty">Could not load history</div>'; return; }
+          if (!data.chats.length) {
+            panel.innerHTML = html + '<div class="fd-empty">No chats yet. Click "New Chat" to start.</div>';
+            return;
+          }
+          html += '<div class="fd-list">';
+          data.chats.forEach(c => {
+            html += `<div class="fd-list-item" onclick="chatModule.openChat(${c.id}, '${escapeHtml(c.title).replace(/'/g, "\\'")}', 'history')">
+              <div><div class="fd-list-item-title">${escapeHtml(c.title)}</div>
+              <div class="fd-list-item-sub">${escapeHtml(c.last_message || 'No messages yet')}</div></div>
+              <button class="fd-btn danger small" onclick="event.stopPropagation(); chatModule.deleteChat(${c.id})">Delete</button>
+            </div>`;
+          });
+          html += '</div>';
+          panel.innerHTML = html;
+        } catch (e) { console.error(e); }
+      },
+
+      async openChat(chatId, title, backTo) {
+        this.currentChatId = chatId;
+        this.selectedImageDataUrl = null;
+        this.selectedImageName = '';
+        const panel = document.getElementById('chatPanel');
+        panel.classList.remove('hidden');
+        const backLink = backTo === 'history'
+          ? fdBack('chatPanel', 'chatModule.showHistory()')
+          : fdBackToCards('aiChatDashboard');
+        panel.innerHTML = `
+          ${backLink}
+          <div class="fd-chat-box">
+            <div class="fd-chat-messages" id="chatMessages"><div class="fd-empty">Loading...</div></div>
+            <div class="fd-chat-doc-chips" id="chatDocChips" aria-live="polite"></div>
+            <div class="fd-chat-composer">
+              <div id="chatDocPicker" class="fd-chat-doc-picker hidden"></div>
+              <div id="chatImagePreview" class="fd-chat-image-preview hidden" aria-live="polite"></div>
+              <div class="fd-chat-input-row">
+                <button class="fd-btn small" type="button" aria-label="Select Document" title="Select Document" onclick="chatModule.toggleDocumentPicker()">📎</button>
+                <button class="fd-btn small" type="button" aria-label="Upload Image" title="Upload Image" onclick="document.getElementById('chatImageInput').click()"><i class="fas fa-image"></i></button>
+                <input id="chatImageInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden onchange="chatModule.selectImage(this.files[0])">
+                <input class="fd-input" id="chatInputBox" placeholder="Type a message..." onkeydown="if(event.key==='Enter') chatModule.sendMessage();">
+                <button class="fd-btn" onclick="chatModule.sendMessage()">Send</button>
+              </div>
+            </div>
+          </div>`;
+        try {
+          const res = await apiFetch(`/chat/${chatId}/messages`);
+          const data = await res.json();
+          const msgBox = document.getElementById('chatMessages');
+          if (data.success) {
+            if (!data.messages.length) {
+              msgBox.innerHTML = '<div class="fd-empty">Say hello to start the conversation!</div>';
+            } else {
+              msgBox.innerHTML = data.messages.map(m =>
+                `<div class="fd-msg ${m.role === 'user' ? 'user' : 'ai'}">${renderChatText(m.content || m.message)}</div>`
+              ).join('');
+              msgBox.scrollTop = msgBox.scrollHeight;
+            }
+          }
+        } catch (e) { console.error(e); }
+      },
+
+      toggleDocumentPicker() {
+        const picker = document.getElementById('chatDocPicker');
+        if (!picker) return;
+        const isHidden = picker.classList.contains('hidden');
+        if (isHidden) {
+          picker.classList.remove('hidden');
+          this.loadDocumentPicker();
+        } else {
+          picker.classList.add('hidden');
+        }
+      },
+
+      async loadDocumentPicker() {
+        const picker = document.getElementById('chatDocPicker');
+        if (!picker) return;
+        try {
+          const res = await apiFetch('/documents');
+          const data = await res.json();
+          if (!data.success || !data.documents.length) {
+            picker.innerHTML = '<div class="fd-empty">No uploaded files yet. Use Document Upload first.</div>';
+            return;
+          }
+          picker.innerHTML = '<div style="font-size:12px;margin-bottom:6px;"><b>Use uploaded files</b></div>' +
+            data.documents.map(d => `
+              <label style="display:block; font-size:12px; margin:4px 0;">
+                <input type="checkbox" name="chatDocSelector" value="${d.id}" onchange="chatModule.updateDocumentChips()">
+                ${escapeHtml(d.file_name)}
+              </label>
+            `).join('');
+        } catch (e) { console.error(e); picker.innerHTML = '<div class="fd-empty">Could not load uploaded files.</div>'; }
+      },
+
+      updateDocumentChips() {
+        const chips = document.getElementById('chatDocChips');
+        if (!chips) return;
+        const selected = Array.from(document.querySelectorAll('input[name="chatDocSelector"]:checked'));
+        chips.innerHTML = selected.map(input => {
+          const fileName = input.parentElement.textContent.trim();
+          return `<span class="fd-chat-doc-chip">📄 ${escapeHtml(fileName)} <button type="button" aria-label="Remove ${escapeHtml(fileName)}" onclick="chatModule.removeSelectedDocument(${Number(input.value)})">×</button></span>`;
+        }).join('');
+      },
+
+      removeSelectedDocument(documentId) {
+        const checkbox = Array.from(document.querySelectorAll('input[name="chatDocSelector"]'))
+          .find(input => Number(input.value) === documentId);
+        if (checkbox) {
+          checkbox.checked = false;
+          this.updateDocumentChips();
+        }
+      },
+
+      selectImage(file) {
+        if (!file) return;
+        if (file.size > 8 * 1024 * 1024) {
+          showToast('Please choose an image smaller than 8 MB');
+          document.getElementById('chatImageInput').value = '';
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.selectedImageDataUrl = reader.result;
+          this.selectedImageName = file.name;
+          const preview = document.getElementById('chatImagePreview');
+          preview.innerHTML = `<img src="${this.selectedImageDataUrl}" alt="Selected image"><span class="fd-chat-image-name">${escapeHtml(file.name)}</span><button type="button" aria-label="Remove image" title="Remove image" onclick="chatModule.clearImage()">&times;</button>`;
+          preview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      },
+
+      clearImage() {
+        this.selectedImageDataUrl = null;
+        this.selectedImageName = '';
+        const input = document.getElementById('chatImageInput');
+        const preview = document.getElementById('chatImagePreview');
+        if (input) input.value = '';
+        if (preview) {
+          preview.innerHTML = '';
+          preview.classList.add('hidden');
+        }
+      },
+
+      async sendMessage() {
+        const input = document.getElementById('chatInputBox');
+        const text = input.value.trim();
+        const imageDataUrl = this.selectedImageDataUrl;
+        if ((!text && !imageDataUrl) || !this.currentChatId) return;
+        const selectedDocs = Array.from(document.querySelectorAll('input[name="chatDocSelector"]:checked')).map(el => Number(el.value));
+        input.value = '';
+        const msgBox = document.getElementById('chatMessages');
+        if (msgBox.querySelector('.fd-empty')) msgBox.innerHTML = '';
+        const imageMarkup = imageDataUrl ? `<br><img src="${imageDataUrl}" alt="Uploaded image" style="max-width:220px;max-height:180px;border-radius:8px;margin-top:6px;">` : '';
+        msgBox.innerHTML += `<div class="fd-msg user">${escapeHtml(text || 'Please analyze this image.')}${imageMarkup}</div>`;
+        msgBox.innerHTML += `<div class="fd-msg ai" id="chatTyping">Thinking...</div>`;
+        this.clearImage();
+        msgBox.scrollTop = msgBox.scrollHeight;
+        try {
+          const res = await apiFetch(`/chat/${this.currentChatId}/message`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: text, document_ids: selectedDocs, image_data_url: imageDataUrl })
+          });
+          const data = await res.json();
+          const typing = document.getElementById('chatTyping');
+          if (data.success) {
+            typing.innerHTML = renderChatText(data.reply);
+            typing.removeAttribute('id');
+          } else {
+            typing.textContent = data.message || 'Something went wrong';
+          }
+          msgBox.scrollTop = msgBox.scrollHeight;
+        } catch (e) {
+          console.error(e);
+          const typing = document.getElementById('chatTyping');
+          if (typing) typing.textContent = 'Error: could not get a reply. Check the backend terminal for details.';
+        }
+      },
+
+      async deleteChat(chatId) {
+        if (!confirm('Delete this chat?')) return;
+        try {
+          await apiFetch(`/chat/${chatId}`, { method: 'DELETE' });
+          this.showHistory();
+        } catch (e) { console.error(e); }
+      },
+
+      async exportCurrent() {
+        if (!this.currentChatId) {
+          showToast('Open a chat first, then export it');
+          this.showHistory();
+          return;
+        }
+        try {
+          const res = await apiFetch(`/chat/${this.currentChatId}/export?format=txt`);
+          const blob = await res.blob();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'chat_export.txt';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+        } catch (e) { console.error(e); showToast('Export failed'); }
+      }
+    };
+    window.chatModule = chatModule;
+
+    // ============================================
+    // DOCUMENTS MODULE
+    // ============================================
+    const docModule = {
+      showUpload() {
+        const panel = document.getElementById('docPanel');
+        panel.classList.remove('hidden');
+        panel.innerHTML = `
+          ${fdBackToCards('documentUploadDashboard')}
+          <input type="file" class="fd-input" id="docFileInput" accept=".pdf,.docx,.doc,.txt,.png,.jpg,.jpeg">
+          <button class="fd-btn" onclick="docModule.upload()">Upload</button>
+          <div id="docUploadStatus" style="margin-top:10px;font-size:13px;"></div>`;
+      },
+
+      async upload() {
+        const input = document.getElementById('docFileInput');
+        const status = document.getElementById('docUploadStatus');
+        if (!input.files.length) { status.textContent = 'Please choose a file first.'; return; }
+        const fd = new FormData();
+        fd.append('file', input.files[0]);
+        status.textContent = 'Uploading...';
+        try {
+          const res = await apiFetch('/documents/upload', { method: 'POST', body: fd });
+          const data = await res.json();
+          if (data.success) {
+            showToast('Document uploaded!');
+            this.showList();
+          } else {
+            status.textContent = data.message || 'Upload failed';
+          }
+        } catch (e) { console.error(e); status.textContent = 'Upload failed'; }
+      },
+
+      async showList() {
+        const panel = document.getElementById('docPanel');
+        panel.classList.remove('hidden');
+        panel.innerHTML = '<div class="fd-empty">Loading...</div>';
+        try {
+          const res = await apiFetch('/documents');
+          const data = await res.json();
+          let html = fdBackToCards('documentUploadDashboard') + `<span class="fd-back-link" style="margin-left:14px;" onclick="docModule.showUpload()">+ Upload another</span>`;
+          if (!data.success || !data.documents.length) {
+            html += '<div class="fd-empty">No documents uploaded yet.</div>';
+          } else {
+            html += '<div class="fd-list">';
+            data.documents.forEach(d => {
+              html += `<div class="fd-list-item" onclick="docModule.showDetail(${d.id})">
+                <div><div class="fd-list-item-title">${escapeHtml(d.file_name)}</div>
+                <div class="fd-list-item-sub">${escapeHtml(d.text_preview || '')}</div></div>
+                <span class="fd-badge">${escapeHtml(d.file_type)}</span>
+              </div>`;
+            });
+            html += '</div>';
+          }
+          panel.innerHTML = html;
+        } catch (e) { console.error(e); }
+      },
+
+      async showDetail(docId) {
+        const panel = document.getElementById('docPanel');
+        panel.innerHTML = '<div class="fd-empty">Loading...</div>';
+        try {
+          const res = await apiFetch(`/documents/${docId}`);
+          const data = await res.json();
+          if (!data.success) { panel.innerHTML = '<div class="fd-empty">Not found</div>'; return; }
+          const doc = data.document;
+          let html = fdBack('docPanel', 'docModule.showList()');
+          html += `<h4>${escapeHtml(doc.file_name)}</h4>
+            <div style="max-height:120px;overflow-y:auto;font-size:12.5px;background:#f5f7fb;padding:8px;border-radius:8px;margin-bottom:10px;">${escapeHtml((doc.extracted_text || '').slice(0, 1500))}</div>
+            <div class="fd-row">
+              <button class="fd-btn small" onclick="docModule.analyze(${docId}, 'summary')">Summarize</button>
+              <button class="fd-btn small" onclick="docModule.analyze(${docId}, 'keywords')">Keywords</button>
+              <button class="fd-btn danger small" onclick="docModule.deleteDoc(${docId})">Delete</button>
+            </div>
+            <div class="fd-row">
+              <input class="fd-input" id="docQuestionInput" placeholder="Ask a question about this document...">
+              <button class="fd-btn small" onclick="docModule.analyze(${docId}, 'qa')">Ask</button>
+            </div>
+            <div id="docAnalysisResult" style="font-size:13px;background:#eef1ff;padding:10px;border-radius:8px;display:none;"></div>`;
+          panel.innerHTML = html;
+        } catch (e) { console.error(e); }
+      },
+
+      async analyze(docId, type) {
+        const resultBox = document.getElementById('docAnalysisResult');
+        const question = type === 'qa' ? (document.getElementById('docQuestionInput')?.value || '') : undefined;
+        resultBox.style.display = 'block';
+        resultBox.textContent = 'Analyzing...';
+        try {
+          const res = await apiFetch(`/documents/${docId}/analyze`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type, question })
+          });
+          const data = await res.json();
+          resultBox.textContent = data.success ? data.result : (data.message || 'Failed');
+        } catch (e) { console.error(e); resultBox.textContent = 'Failed'; }
+      },
+
+      async deleteDoc(docId) {
+        if (!confirm('Delete this document?')) return;
+        try {
+          await apiFetch(`/documents/${docId}`, { method: 'DELETE' });
+          this.showList();
+        } catch (e) { console.error(e); }
+      }
+    };
+    window.docModule = docModule;
+
+    // ============================================
+    // SMART NOTES MODULE
+    // ============================================
+    const notesModule = {
+      async showAISummarize() {
+        const panel = document.getElementById('notesPanel');
+        panel.classList.remove('hidden');
+        panel.innerHTML = `${fdBackToCards('smartNotesDashboard')}
+          <button class="fd-btn secondary" onclick="notesModule.toggleDocPicker()">Select a document to summarize <i class="fas fa-chevron-down"></i></button>
+          <div id="notesDocPicker" class="hidden" style="margin-top:12px;"><div class="fd-empty">Loading your documents...</div></div>`;
+      },
+
+      async toggleDocPicker() {
+        const box = document.getElementById('notesDocPicker');
+        const isHidden = box.classList.contains('hidden');
+        if (!isHidden) { box.classList.add('hidden'); return; }
+        box.classList.remove('hidden');
+        try {
+          const res = await apiFetch('/documents');
+          const data = await res.json();
+          let html = '';
+          if (!data.success || !data.documents.length) {
+            html = '<div class="fd-empty">No documents uploaded yet. Upload one from Document Upload first.</div>';
+          } else {
+            html = '<div class="fd-list">';
+            data.documents.forEach(d => {
+              html += `<div class="fd-list-item" onclick="notesModule.createFromDoc(${d.id}, '${escapeHtml(d.file_name).replace(/'/g, "\\'")}')">
+                <div class="fd-list-item-title">${escapeHtml(d.file_name)}</div>
+              </div>`;
+            });
+            html += '</div>';
+          }
+          box.innerHTML = html;
+        } catch (e) { console.error(e); }
+      },
+
+      async createFromDoc(docId, fileName) {
+        const panel = document.getElementById('notesPanel');
+        panel.innerHTML = '<div class="fd-empty">Reading document & generating summary...</div>';
+        try {
+          const docRes = await apiFetch(`/documents/${docId}`);
+          const docData = await docRes.json();
+          if (!docData.success) { showToast('Could not read document'); return; }
+          const content = (docData.document.extracted_text || '').slice(0, 8000);
+
+          const noteRes = await apiFetch('/notes', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title: fileName, content })
+          });
+          const noteData = await noteRes.json();
+          if (!noteData.success) { showToast(noteData.message || 'Could not create note'); return; }
+
+          const sumRes = await apiFetch(`/notes/${noteData.note.id}/summarize`, { method: 'POST' });
+          const sumData = await sumRes.json();
+          if (!sumData.success) showToast(sumData.message || 'Summary failed, but note was saved');
+
+          this.showDetail(noteData.note.id);
+        } catch (e) { console.error(e); showToast('Something went wrong'); }
+      },
+
+      showCreate() {
+        const panel = document.getElementById('notesPanel');
+        panel.classList.remove('hidden');
+        panel.innerHTML = `
+          ${fdBack('notesPanel', 'notesModule.showList()')}
+          <input class="fd-input" id="noteTitleInput" placeholder="Note title">
+          <textarea class="fd-textarea" id="noteContentInput" placeholder="Write your note here..."></textarea>
+          <button class="fd-btn" onclick="notesModule.create()">Save Note</button>`;
+      },
+
+      async create() {
+        const title = document.getElementById('noteTitleInput').value.trim();
+        const content = document.getElementById('noteContentInput').value.trim();
+        if (!title) { showToast('Please add a title'); return; }
+        try {
+          const res = await apiFetch('/notes', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, content })
+          });
+          const data = await res.json();
+          if (data.success) { showToast('Note created!'); this.showList(); }
+          else showToast(data.message || 'Could not create note');
+        } catch (e) { console.error(e); }
+      },
+
+      async showList() {
+        const panel = document.getElementById('notesPanel');
+        panel.classList.remove('hidden');
+        panel.innerHTML = '<div class="fd-empty">Loading...</div>';
+        try {
+          const res = await apiFetch('/notes');
+          const data = await res.json();
+          let html = fdBackToCards('smartNotesDashboard');
+          if (!data.success || !data.notes.length) {
+            html += '<div class="fd-empty">No notes yet.</div>';
+          } else {
+            html += '<div class="fd-list">';
+            data.notes.forEach(n => {
+              html += `<div class="fd-list-item" onclick="notesModule.showDetail(${n.id})">
+                <div><div class="fd-list-item-title">${escapeHtml(n.title)} ${n.has_summary ? '<span class="fd-badge">Summarized</span>' : ''}</div>
+                <div class="fd-list-item-sub">${escapeHtml(n.preview || '')}</div></div>
+              </div>`;
+            });
+            html += '</div>';
+          }
+          panel.innerHTML = html;
+        } catch (e) { console.error(e); }
+      },
+
+      async showDetail(noteId) {
+        const panel = document.getElementById('notesPanel');
+        panel.innerHTML = '<div class="fd-empty">Loading...</div>';
+        try {
+          const res = await apiFetch(`/notes/${noteId}`);
+          const data = await res.json();
+          if (!data.success) return;
+          const n = data.note;
+          let html = fdBack('notesPanel', 'notesModule.showList()');
+          html += `<input class="fd-input" id="noteEditTitle" value="${escapeHtml(n.title)}">
+            <textarea class="fd-textarea" id="noteEditContent">${escapeHtml(n.content || '')}</textarea>
+            <div class="fd-row">
+              <button class="fd-btn small" onclick="notesModule.save(${noteId})">Save</button>
+              <button class="fd-btn small secondary" onclick="notesModule.summarize(${noteId})">AI Summarize</button>
+              <button class="fd-btn danger small" onclick="notesModule.remove(${noteId})">Delete</button>
+            </div>
+            <section class="fd-note-summary" id="noteSummary" aria-live="polite" ${n.ai_summary ? '' : 'hidden'}>
+              <h5>AI Summary</h5>
+              <div class="fd-note-summary-content" id="noteSummaryContent">${escapeHtml(n.ai_summary || '')}</div>
+            </section>`;
+          panel.innerHTML = html;
+        } catch (e) { console.error(e); }
+      },
+
+      async save(noteId) {
+        const title = document.getElementById('noteEditTitle').value.trim();
+        const content = document.getElementById('noteEditContent').value.trim();
+        try {
+          await apiFetch(`/notes/${noteId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, content })
+          });
+          showToast('Note saved!');
+        } catch (e) { console.error(e); }
+      },
+
+      async summarize(noteId) {
+        const summaryBox = document.getElementById('noteSummary');
+        const summaryContent = document.getElementById('noteSummaryContent');
+        if (summaryBox && summaryContent) {
+          summaryBox.hidden = false;
+          summaryContent.textContent = 'Generating summary...';
+        }
+        try {
+          const res = await apiFetch(`/notes/${noteId}/summarize`, { method: 'POST' });
+          const data = await res.json();
+          if (data.success) {
+            if (summaryBox && summaryContent) summaryContent.textContent = data.summary || '';
+          } else {
+            if (summaryBox && summaryContent) summaryContent.textContent = data.message || 'Could not summarize';
+            showToast(data.message || 'Could not summarize');
+          }
+        } catch (e) {
+          console.error(e);
+          if (summaryBox && summaryContent) summaryContent.textContent = 'Could not generate a summary.';
+        }
+      },
+
+      async remove(noteId) {
+        if (!confirm('Delete this note?')) return;
+        try {
+          await apiFetch(`/notes/${noteId}`, { method: 'DELETE' });
+          this.showList();
+        } catch (e) { console.error(e); }
+      }
+    };
+    window.notesModule = notesModule;
+
+    // ============================================
+    // PLANNER MODULE
+    // ============================================
+    const plannerModule = {
+      showAddTask() {
+        const panel = document.getElementById('plannerPanel');
+        panel.classList.remove('hidden');
+        panel.innerHTML = `
+          ${fdBackToCards('plannerDashboard')}
+          <input class="fd-input" id="taskTitleInput" placeholder="Task title">
+          <textarea class="fd-textarea" id="taskDescInput" placeholder="Description (optional)"></textarea>
+          <div class="fd-row">
+            <input class="fd-input" type="date" id="taskDateInput" style="flex:1;">
+            <input class="fd-input" type="time" id="taskTimeInput" style="flex:1;">
+          </div>
+          <select class="fd-select" id="taskPriorityInput">
+            <option value="low">Low priority</option>
+            <option value="medium" selected>Medium priority</option>
+            <option value="high">High priority</option>
+          </select>
+          <button class="fd-btn" onclick="plannerModule.addTask()">Save Task</button>`;
+      },
+
+      async addTask() {
+        const title = document.getElementById('taskTitleInput').value.trim();
+        if (!title) { showToast('Please add a task title'); return; }
+        const body = {
+          title,
+          description: document.getElementById('taskDescInput').value.trim(),
+          dueDate: document.getElementById('taskDateInput').value || null,
+          dueTime: document.getElementById('taskTimeInput').value || null,
+          priority: document.getElementById('taskPriorityInput').value
+        };
+        try {
+          const res = await apiFetch('/tasks', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+          });
+          const data = await res.json();
+          if (data.success) { showToast('Task added!'); this.showTasks(); }
+          else showToast(data.message || 'Could not add task');
+        } catch (e) { console.error(e); }
+      },
+
+      async showTasks() {
+        const panel = document.getElementById('plannerPanel');
+        panel.classList.remove('hidden');
+        panel.innerHTML = '<div class="fd-empty">Loading...</div>';
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        try {
+          const res = await apiFetch('/tasks', { signal: controller.signal });
+          if (!res.ok) throw new Error(`Request failed (${res.status})`);
+          const data = await res.json();
+          if (!data.success || !Array.isArray(data.tasks)) {
+            throw new Error(data.message || 'Unexpected response from server');
+          }
+          let html = fdBackToCards('plannerDashboard') + `<span class="fd-back-link" style="margin-left:14px;" onclick="plannerModule.showAddTask()">+ Add Task</span>`;
+          if (!data.tasks.length) {
+            html += '<div class="fd-empty">No tasks yet.</div>';
+          } else {
+            html += '<div class="fd-list">';
+            data.tasks.forEach(t => {
+              const done = t.status === 'completed';
+              const dueText = this.formatDueDateTime(t.due_date, t.due_time);
+              html += `<div class="fd-list-item">
+                <div>
+                  <div class="fd-list-item-title" style="${done ? 'text-decoration:line-through;color:#999;' : ''}">${escapeHtml(t.title)}
+                    <span class="fd-badge">${escapeHtml(t.priority)}</span></div>
+                  <div class="fd-list-item-sub">${escapeHtml(dueText)}</div>
+                </div>
+                <div class="fd-row" style="margin:0;">
+                  ${!done ? `<button class="fd-btn small" onclick="plannerModule.markDone(${t.id})">Done</button>` : ''}
+                  <button class="fd-btn small secondary" onclick="plannerModule.addReminder(${t.id})">Remind</button>
+                  <button class="fd-btn danger small" onclick="plannerModule.deleteTask(${t.id})">Del</button>
+                </div>
+              </div>`;
+            });
+            html += '</div>';
+          }
+          panel.innerHTML = html;
+        } catch (e) {
+          console.error(e);
+          const message = e.name === 'AbortError'
+            ? 'Loading tasks timed out. Check that the backend is running and try again.'
+            : 'Could not load tasks. Check your connection and try again.';
+          panel.innerHTML = `${fdBackToCards('plannerDashboard')}<div class="fd-empty">${message}<br><button class="fd-btn small" onclick="plannerModule.showTasks()">Retry</button></div>`;
+        } finally {
+          clearTimeout(timeoutId);
+        }
+      },
+
+      formatDueDateTime(dueDate, dueTime) {
+        if (!dueDate && !dueTime) return 'No due date';
+        let dateLabel = '';
+        if (dueDate) {
+          const match = String(dueDate).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+          if (match) {
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            dateLabel = `${Number(match[3])} ${monthNames[Number(match[2]) - 1]} ${match[1]}`;
+          } else {
+            dateLabel = String(dueDate);
+          }
+        }
+        let timeLabel = '';
+        const timeMatch = dueTime && String(dueTime).match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
+        if (timeMatch) {
+          const hour = Number(timeMatch[1]);
+          timeLabel = `${hour % 12 || 12}:${timeMatch[2]} ${hour >= 12 ? 'PM' : 'AM'}`;
+        } else if (dueTime) {
+          timeLabel = String(dueTime);
+        }
+        return `Due: ${dateLabel || 'Date not set'}${timeLabel ? `, ${timeLabel}` : ''}`;
+      },
+
+      async markDone(taskId) {
+        try {
+          await apiFetch(`/tasks/${taskId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: 'completed' })
+          });
+          this.showTasks();
+        } catch (e) { console.error(e); }
+      },
+
+      async deleteTask(taskId) {
+        if (!confirm('Delete this task?')) return;
+        try {
+          await apiFetch(`/tasks/${taskId}`, { method: 'DELETE' });
+          this.showTasks();
+        } catch (e) { console.error(e); }
+      },
+
+      async addReminder(taskId) {
+        document.getElementById('reminderModal')?.remove();
+        document.getElementById('plannerPanel').insertAdjacentHTML('beforeend', `
+          <div class="fd-modal-backdrop" id="reminderModal" onclick="if(event.target===this) plannerModule.closeReminderModal()">
+            <form class="fd-modal" role="dialog" aria-modal="true" aria-labelledby="reminderModalTitle" onsubmit="event.preventDefault(); plannerModule.saveReminder(${taskId});">
+              <h3 id="reminderModalTitle">Set Reminder</h3>
+              <label for="reminderDateTimeInput">Date and time</label>
+              <input class="fd-input" id="reminderDateTimeInput" type="datetime-local" required>
+              <div class="fd-modal-actions">
+                <button class="fd-btn secondary" type="button" onclick="plannerModule.closeReminderModal()">Cancel</button>
+                <button class="fd-btn" type="submit">Set Reminder</button>
+              </div>
+            </form>
+          </div>`);
+        document.getElementById('reminderDateTimeInput').focus();
+      },
+
+      closeReminderModal() {
+        document.getElementById('reminderModal')?.remove();
+      },
+
+      async saveReminder(taskId) {
+        const input = document.getElementById('reminderDateTimeInput');
+        const when = input?.value;
+        if (!when) return;
+        try {
+          const res = await apiFetch(`/tasks/${taskId}/reminders`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ remindAt: when })
+          });
+          const data = await res.json();
+          if (data.success) {
+            this.closeReminderModal();
+            showToast('Reminder set!');
+          } else showToast(data.message || 'Could not set reminder');
+        } catch (e) { console.error(e); }
+      },
+
+      async showCalendar() {
+        const panel = document.getElementById('plannerPanel');
+        panel.classList.remove('hidden');
+        panel.innerHTML = '<div class="fd-empty">Loading...</div>';
+        try {
+          const res = await apiFetch('/tasks/calendar');
+          const data = await res.json();
+          let html = fdBack('plannerPanel', 'plannerModule.showTasks()');
+          const dates = Object.keys(data.tasksByDate || {}).filter(d => d !== 'no_date').sort();
+          if (!dates.length) {
+            html += '<div class="fd-empty">No scheduled tasks yet.</div>';
+          } else {
+            html += '<div class="fd-list">';
+            dates.forEach(date => {
+              html += `<div class="fd-list-item" style="display:block;">
+                <div class="fd-list-item-title">${date}</div>`;
+              data.tasksByDate[date].forEach(t => {
+                html += `<div class="fd-list-item-sub">• ${escapeHtml(t.title)} (${escapeHtml(t.priority)})</div>`;
+              });
+              html += `</div>`;
+            });
+            html += '</div>';
+          }
+          panel.innerHTML = html;
+        } catch (e) { console.error(e); }
+      },
+
+      async showReminders() {
+        const panel = document.getElementById('plannerPanel');
+        panel.classList.remove('hidden');
+        panel.innerHTML = '<div class="fd-empty">Loading...</div>';
+        try {
+          const res = await apiFetch('/reminders');
+          const data = await res.json();
+          let html = fdBackToCards('plannerDashboard');
+          if (!data.success || !data.reminders.length) {
+            html += '<div class="fd-empty">No reminders set.</div>';
+          } else {
+            html += '<div class="fd-list">';
+            data.reminders.forEach(r => {
+              html += `<div class="fd-list-item">
+                <div><div class="fd-list-item-title">${escapeHtml(r.task_title)}</div>
+                <div class="fd-list-item-sub">${r.remind_at}</div></div>
+                <button class="fd-btn danger small" onclick="plannerModule.deleteReminder(${r.id})">Delete</button>
+              </div>`;
+            });
+            html += '</div>';
+          }
+          panel.innerHTML = html;
+        } catch (e) { console.error(e); }
+      },
+
+      async deleteReminder(reminderId) {
+        try {
+          await apiFetch(`/reminders/${reminderId}`, { method: 'DELETE' });
+          this.showReminders();
+        } catch (e) { console.error(e); }
+      }
+    };
+    window.plannerModule = plannerModule;
+
+    // ============================================
+    // TEAM WORKSPACE MODULE
+    // ============================================
+    const teamModule = {
+      activeTeamId: null,
+      activeTeamName: '',
+      pendingAction: null,
+
+      async showTeams(afterMsg) {
+        const panel = document.getElementById('teamPanel');
+        panel.classList.remove('hidden');
+        panel.innerHTML = '<div class="fd-empty">Loading...</div>';
+        try {
+          const res = await apiFetch('/teams');
+          const data = await res.json();
+          let html = `${fdBackToCards('teamWorkspaceDashboard')}
+            ${afterMsg ? `<div class="fd-empty">${escapeHtml(afterMsg)}</div>` : ''}
+            <input class="fd-input" id="newTeamNameInput" placeholder="New team name">
+            <button class="fd-btn" onclick="teamModule.createTeam()">Create Team</button><br><br>`;
+          const invitesRes = await apiFetch('/teams/invites/pending');
+          const invitesData = await invitesRes.json();
+          if (invitesData.success && invitesData.invites.length) {
+            html += '<h4>Pending Team Invites</h4><div class="fd-list">';
+            invitesData.invites.forEach(invite => {
+              html += `<div class="fd-list-item">
+                <div><div class="fd-list-item-title">${escapeHtml(invite.team_name)}</div>
+                <div class="fd-list-item-sub">Invited by ${escapeHtml(invite.invited_by_name || 'a team member')}</div></div>
+                <div class="fd-row" style="margin:0;">
+                  <button class="fd-btn small" onclick="teamModule.respondToInvite(${invite.id}, 'accept')">Accept</button>
+                  <button class="fd-btn danger small" onclick="teamModule.respondToInvite(${invite.id}, 'reject')">Reject</button>
+                </div>
+              </div>`;
+            });
+            html += '</div><br>';
+          }
+          if (!data.success || !data.teams.length) {
+            html += '<div class="fd-empty">No teams yet. Create one above.</div>';
+          } else {
+            html += '<div class="fd-list">';
+            data.teams.forEach(t => {
+              html += `<div class="fd-list-item" onclick="teamModule.selectTeam(${t.id}, '${escapeHtml(t.name).replace(/'/g, "\\'")}')">
+                <div><div class="fd-list-item-title">${escapeHtml(t.name)}</div>
+                <div class="fd-list-item-sub">${t.member_count} member(s) · ${escapeHtml(t.role)}</div></div>
+                ${t.role === 'admin' ? `<button class="fd-btn danger small" onclick="event.stopPropagation(); teamModule.deleteTeam(${t.id}, '${escapeHtml(t.name).replace(/'/g, "\\'")}')">Delete</button>` : ''}
+              </div>`;
+            });
+            html += '</div>';
+          }
+          panel.innerHTML = html;
+        } catch (e) { console.error(e); }
+      },
+
+      async createTeam() {
+        const name = document.getElementById('newTeamNameInput').value.trim();
+        if (!name) { showToast('Enter a team name'); return; }
+        try {
+          const res = await apiFetch('/teams', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name })
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast('Team created!');
+            this.activeTeamId = data.team.id;
+            this.activeTeamName = data.team.name;
+            this.showInvite();
+          } else {
+            showToast(data.message || 'Could not create team');
+          }
+        } catch (e) { console.error(e); }
+      },
+
+      async deleteTeam(teamId, teamName) {
+        if (!confirm(`Delete "${teamName}" and all its messages, invites, and board tasks? This cannot be undone.`)) return;
+        try {
+          const res = await apiFetch(`/teams/${teamId}`, { method: 'DELETE' });
+          const data = await res.json();
+          if (!data.success) {
+            showToast(data.message || 'Could not delete team');
+            return;
+          }
+          if (this.activeTeamId === teamId) {
+            this.activeTeamId = null;
+            this.activeTeamName = '';
+          }
+          showToast('Team deleted');
+          this.showTeams();
+        } catch (e) { console.error(e); }
+      },
+
+      selectTeam(id, name) {
+        this.activeTeamId = id;
+        this.activeTeamName = name;
+        if (this.pendingAction === 'chat') {
+          this.pendingAction = null;
+          this.showChat();
+        } else {
+          this.pendingAction = null;
+          this.showTeamActions();
+        }
+      },
+
+      showTeamActions() {
+        const panel = document.getElementById('teamPanel');
+        panel.classList.remove('hidden');
+        panel.innerHTML = `
+          ${fdBack('teamPanel', 'teamModule.showTeams()')}
+          <h4>${escapeHtml(this.activeTeamName)}</h4>
+          <button class="fd-btn" onclick="teamModule.showChat()">Open Team Chat</button>
+          <button class="fd-btn secondary" onclick="teamModule.showRoster()">View Members</button>
+          <button class="fd-btn secondary" onclick="teamModule.showInvite()">Invite Members</button>`;
+      },
+
+      async respondToInvite(inviteId, action) {
+        try {
+          const res = await apiFetch(`/teams/invites/${inviteId}/${action}`, { method: 'POST' });
+          const data = await res.json();
+          if (!data.success) {
+            showToast(data.message || 'Could not update invite');
+            return;
+          }
+          showToast(action === 'accept' ? 'You joined the team!' : 'Invite rejected');
+          this.showTeams();
+        } catch (e) { console.error(e); }
+      },
+
+      requireTeam(action) {
+        if (!this.activeTeamId) {
+          this.pendingAction = action || null;
+          this.showTeams('Select or create a team first');
+          return false;
+        }
+        return true;
+      },
+
+      showInvite() {
+        if (!this.requireTeam('invite')) return;
+        const panel = document.getElementById('teamPanel');
+        panel.classList.remove('hidden');
+        panel.innerHTML = `
+          ${fdBack('teamPanel', 'teamModule.showTeams()')}
+          <h4>${escapeHtml(this.activeTeamName)}</h4>
+          <input class="fd-input" id="inviteEmailInput" type="email" placeholder="Email to invite">
+          <button class="fd-btn" id="sendTeamInviteButton" onclick="teamModule.sendInvite()">Send Invite</button>
+          <br><br>
+          <button class="fd-btn secondary" onclick="teamModule.showChat()">Open Team Chat</button>`;
+      },
+
+      async sendInvite() {
+        const emailInput = document.getElementById('inviteEmailInput');
+        const email = emailInput.value.trim();
+        if (!email) {
+          showToast('Enter an email address');
+          emailInput.focus();
+          return;
+        }
+        emailInput.value = email;
+        if (!emailInput.checkValidity()) {
+          showToast('Enter a valid email address');
+          emailInput.focus();
+          return;
+        }
+
+        const button = document.getElementById('sendTeamInviteButton');
+        const buttonLabel = button.textContent;
+        button.disabled = true;
+        button.textContent = 'Sending...';
+        try {
+          const res = await apiFetch(`/teams/${this.activeTeamId}/invite`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+          });
+          let data = {};
+          try { data = await res.json(); } catch { data = {}; }
+          if (!res.ok || !data.success) {
+            showToast(data.message || `Could not send invite (HTTP ${res.status})`);
+            return;
+          }
+          showToast('Invite sent!');
+          emailInput.value = '';
+        } catch (e) {
+          console.error(e);
+          showToast('Could not send invite. Check the server connection and try again.');
+        } finally {
+          button.disabled = false;
+          button.textContent = buttonLabel;
+        }
+      },
+
+      async showRoster() {
+        if (!this.requireTeam()) return;
+        const panel = document.getElementById('teamPanel');
+        panel.classList.remove('hidden');
+        panel.innerHTML = '<div class="fd-empty">Loading...</div>';
+        try {
+          const res = await apiFetch(`/teams/${this.activeTeamId}/roster`);
+          const data = await res.json();
+          let html = `${fdBack('teamPanel', 'teamModule.showTeams()')}<h4>${escapeHtml(this.activeTeamName)} — Roster</h4>`;
+          if (data.success) {
+            html += '<div class="fd-list">';
+            data.roster.forEach(m => {
+              html += `<div class="fd-list-item">
+                <div><div class="fd-list-item-title">${escapeHtml(m.full_name)}</div>
+                <div class="fd-list-item-sub">${escapeHtml(m.email)}</div></div>
+                <span class="fd-badge">${escapeHtml(m.role)}</span>
+              </div>`;
+            });
+            html += '</div>';
+          }
+          panel.innerHTML = html;
+        } catch (e) { console.error(e); }
+      },
+
+      async showBoard() {
+        if (!this.requireTeam()) return;
+        const panel = document.getElementById('teamPanel');
+        panel.classList.remove('hidden');
+        panel.innerHTML = '<div class="fd-empty">Loading...</div>';
+        try {
+          const res = await apiFetch(`/teams/${this.activeTeamId}/board`);
+          const data = await res.json();
+          let html = `${fdBack('teamPanel', 'teamModule.showTeams()')}<h4>${escapeHtml(this.activeTeamName)} — Board</h4>
+            <div class="fd-row">
+              <input class="fd-input" id="boardTaskInput" placeholder="New card title" style="flex:1;">
+              <button class="fd-btn small" onclick="teamModule.addBoardTask()">Add</button>
+            </div>`;
+          if (data.success) {
+            ['todo', 'in_progress', 'done'].forEach(col => {
+              const label = col === 'todo' ? 'To Do' : col === 'in_progress' ? 'In Progress' : 'Done';
+              html += `<div style="margin-top:10px;"><b>${label}</b><div class="fd-list">`;
+              (data.columns[col] || []).forEach(card => {
+                html += `<div class="fd-list-item">
+                  <div class="fd-list-item-title">${escapeHtml(card.title)}</div>
+                  <div class="fd-row" style="margin:0;">
+                    ${col !== 'done' ? `<button class="fd-btn small secondary" onclick="teamModule.moveCard(${card.id}, '${col === 'todo' ? 'in_progress' : 'done'}')">Next</button>` : ''}
+                    <button class="fd-btn danger small" onclick="teamModule.deleteCard(${card.id})">Del</button>
+                  </div>
+                </div>`;
+              });
+              html += '</div></div>';
+            });
+          }
+          panel.innerHTML = html;
+        } catch (e) { console.error(e); }
+      },
+
+      async addBoardTask() {
+        const title = document.getElementById('boardTaskInput').value.trim();
+        if (!title) return;
+        try {
+          await apiFetch(`/teams/${this.activeTeamId}/board/tasks`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title })
+          });
+          this.showBoard();
+        } catch (e) { console.error(e); }
+      },
+
+      async moveCard(cardId, newStatus) {
+        try {
+          await apiFetch(`/teams/board/tasks/${cardId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: newStatus })
+          });
+          this.showBoard();
+        } catch (e) { console.error(e); }
+      },
+
+      async deleteCard(cardId) {
+        try {
+          await apiFetch(`/teams/board/tasks/${cardId}`, { method: 'DELETE' });
+          this.showBoard();
+        } catch (e) { console.error(e); }
+      },
+
+      async showChat() {
+        if (!this.requireTeam('chat')) return;
+        const panel = document.getElementById('teamPanel');
+        panel.classList.remove('hidden');
+        panel.innerHTML = '<div class="fd-empty">Loading...</div>';
+        try {
+          const res = await apiFetch(`/teams/${this.activeTeamId}/chat`);
+          const data = await res.json();
+          let html = `${fdBack('teamPanel', 'teamModule.showTeams()')}
+            <div class="fd-chat-box">
+              <div class="fd-chat-messages" id="teamChatMessages">`;
+          if (data.success && data.messages.length) {
+            data.messages.forEach(m => {
+              html += `<div class="fd-msg ${m.user_id == getCurrentUserId() ? 'user' : 'ai'}"><b>${escapeHtml(m.full_name)}:</b> ${escapeHtml(m.message)}</div>`;
+            });
+          } else {
+            html += '<div class="fd-empty">No messages yet.</div>';
+          }
+          html += `</div>
+              <div class="fd-chat-input-row">
+                <input class="fd-input" id="teamChatInput" placeholder="Message the team..." onkeydown="if(event.key==='Enter') teamModule.sendTeamMessage();">
+                <button class="fd-btn" onclick="teamModule.sendTeamMessage()">Send</button>
+              </div>
+            </div>`;
+          panel.innerHTML = html;
+        } catch (e) { console.error(e); }
+      },
+
+      async sendTeamMessage() {
+        const input = document.getElementById('teamChatInput');
+        const text = input.value.trim();
+        if (!text) return;
+        input.value = '';
+        try {
+          await apiFetch(`/teams/${this.activeTeamId}/chat`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: text })
+          });
+          this.showChat();
+        } catch (e) { console.error(e); }
+      }
+    };
+    window.teamModule = teamModule;
+
+    function getCurrentUserId() {
+      // best-effort: not stored separately, team chat still shows names correctly either way
+      return null;
+    }
+
+    // ============================================
+    // QUIZ MODULE
+    // ============================================
+    const quizModule = {
+      draftQuestions: [],
+
+      async showTakeQuizPicker() {
+        const panel = document.getElementById('quizPanel');
+        panel.classList.remove('hidden');
+        panel.innerHTML = '<div class="fd-empty">Loading your documents...</div>';
+        try {
+          const res = await apiFetch('/documents');
+          const data = await res.json();
+          let html = fdBackToCards('quizzDashboard') + '<div style="font-weight:600;margin:8px 0;">Select a document:</div>';
+          if (!data.success || !data.documents.length) {
+            html += '<div class="fd-empty">No documents uploaded yet. Upload one from Document Upload first.</div>';
+          } else {
+            html += '<div class="fd-list">';
+            data.documents.forEach(d => {
+              html += `<div class="fd-list-item" onclick="quizModule.showQuestionCountPicker(${d.id}, '${escapeHtml(d.file_name).replace(/'/g, "\\'")}')">
+                <div class="fd-list-item-title">${escapeHtml(d.file_name)}</div>
+              </div>`;
+            });
+            html += '</div>';
+          }
+          panel.innerHTML = html;
+        } catch (e) { console.error(e); }
+      },
+
+      showQuestionCountPicker(docId, fileName) {
+        const panel = document.getElementById('quizPanel');
+        let html = `${fdBack('quizPanel', 'quizModule.showTakeQuizPicker()')}
+          <div style="font-weight:600;margin:8px 0;">How many questions do you want?</div>
+          <div class="fd-row" style="flex-wrap:wrap;gap:8px;">
+            ${[10, 20, 30, 40, 50].map(n => `<button class="fd-btn small secondary" onclick="quizModule.generateAndTake(${docId}, '${fileName.replace(/'/g, "\\'")}', ${n})">${n} Questions</button>`).join('')}
+          </div>`;
+        panel.innerHTML = html;
+      },
+
+      async generateAndTake(docId, fileName, count) {
+        const panel = document.getElementById('quizPanel');
+        panel.innerHTML = `<div class="fd-empty">Generating ${count} questions from your document... this may take a moment.</div>`;
+        try {
+          const res = await apiFetch('/quizzes/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ documentId: docId, title: fileName + ' Quiz', numQuestions: count })
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast(`Quiz generated with ${data.quiz.questionCount} questions!`);
+            this.takeQuiz(data.quiz.id);
+          } else {
+            showToast(data.message || 'Could not generate quiz');
+            this.showList();
+          }
+        } catch (e) { console.error(e); showToast('Something went wrong'); }
+      },
+
+      async showResultsPicker() {
+        const panel = document.getElementById('quizPanel');
+        panel.classList.remove('hidden');
+        panel.innerHTML = '<div class="fd-empty">Loading...</div>';
+        try {
+          const res = await apiFetch('/quizzes');
+          const data = await res.json();
+          let html = fdBackToCards('quizzDashboard');
+          if (!data.success || !data.quizzes.length) {
+            html += '<div class="fd-empty">No quizzes yet.</div>';
+          } else {
+            html += '<div class="fd-list">';
+            data.quizzes.forEach(q => {
+              html += `<div class="fd-list-item" onclick="quizModule.showResults(${q.id})">
+                <div><div class="fd-list-item-title">${escapeHtml(q.title)}</div>
+                <div class="fd-list-item-sub">${q.attempt_count} attempt(s)</div></div>
+              </div>`;
+            });
+            html += '</div>';
+          }
+          panel.innerHTML = html;
+        } catch (e) { console.error(e); }
+      },
+
+      showCreate() {
+        this.draftQuestions = [];
+        this.renderCreate();
+      },
+
+      renderCreate() {
+        const panel = document.getElementById('quizPanel');
+        panel.classList.remove('hidden');
+        let html = `${fdBack('quizPanel', 'quizModule.showList()')}
+          <input class="fd-input" id="quizTitleInput" placeholder="Quiz title">
+          <div style="font-weight:600;margin:8px 0;">Questions added: ${this.draftQuestions.length}</div>
+          <input class="fd-input" id="qQuestionText" placeholder="Question text">
+          <input class="fd-input" id="qOptionA" placeholder="Option A">
+          <input class="fd-input" id="qOptionB" placeholder="Option B">
+          <input class="fd-input" id="qOptionC" placeholder="Option C">
+          <input class="fd-input" id="qOptionD" placeholder="Option D">
+          <select class="fd-select" id="qCorrectOption">
+            <option value="A">Correct: A</option>
+            <option value="B">Correct: B</option>
+            <option value="C">Correct: C</option>
+            <option value="D">Correct: D</option>
+          </select>
+          <div class="fd-row">
+            <button class="fd-btn small secondary" onclick="quizModule.addQuestion()">+ Add Question</button>
+            <button class="fd-btn small" onclick="quizModule.saveQuiz()">Save Quiz</button>
+          </div>`;
+        panel.innerHTML = html;
+      },
+
+      addQuestion() {
+        const q = {
+          questionText: document.getElementById('qQuestionText').value.trim(),
+          optionA: document.getElementById('qOptionA').value.trim(),
+          optionB: document.getElementById('qOptionB').value.trim(),
+          optionC: document.getElementById('qOptionC').value.trim(),
+          optionD: document.getElementById('qOptionD').value.trim(),
+          correctOption: document.getElementById('qCorrectOption').value
+        };
+        if (!q.questionText || !q.optionA || !q.optionB) { showToast('Fill at least the question and options A/B'); return; }
+        this.draftQuestions.push(q);
+        showToast('Question added');
+        this.renderCreate();
+      },
+
+      async saveQuiz() {
+        const title = document.getElementById('quizTitleInput').value.trim();
+        if (!title) { showToast('Please add a quiz title'); return; }
+        if (!this.draftQuestions.length) { showToast('Add at least one question'); return; }
+        try {
+          const res = await apiFetch('/quizzes', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, questions: this.draftQuestions })
+          });
+          const data = await res.json();
+          if (data.success) { showToast('Quiz created!'); this.draftQuestions = []; this.showList(); }
+          else showToast(data.message || 'Could not create quiz');
+        } catch (e) { console.error(e); }
+      },
+
+      async showList() {
+        const panel = document.getElementById('quizPanel');
+        panel.classList.remove('hidden');
+        panel.innerHTML = '<div class="fd-empty">Loading...</div>';
+        try {
+          const res = await apiFetch('/quizzes');
+          const data = await res.json();
+          let html = fdBackToCards('quizzDashboard');
+          if (!data.success || !data.quizzes.length) {
+            html += '<div class="fd-empty">No quizzes yet.</div>';
+          } else {
+            html += '<div class="fd-list">';
+            data.quizzes.forEach(q => {
+              html += `<div class="fd-list-item">
+                <div><div class="fd-list-item-title">${escapeHtml(q.title)}</div>
+                <div class="fd-list-item-sub">${q.question_count} questions · ${q.attempt_count} attempt(s)</div></div>
+                <div class="fd-row" style="margin:0;">
+                  <button class="fd-btn small" onclick="quizModule.takeQuiz(${q.id})">Take</button>
+                  <button class="fd-btn small secondary" onclick="quizModule.showResults(${q.id})">Results</button>
+                  <button class="fd-btn danger small" onclick="quizModule.deleteQuiz(${q.id})">Del</button>
+                </div>
+              </div>`;
+            });
+            html += '</div>';
+          }
+          panel.innerHTML = html;
+        } catch (e) { console.error(e); }
+      },
+
+      async takeQuiz(quizId) {
+        const panel = document.getElementById('quizPanel');
+        panel.innerHTML = '<div class="fd-empty">Loading...</div>';
+        try {
+          const res = await apiFetch(`/quizzes/${quizId}`);
+          const data = await res.json();
+          if (!data.success) return;
+          this.currentAnswers = {};
+          let html = `${fdBack('quizPanel', 'quizModule.showList()')}<h4>${escapeHtml(data.quiz.title)}</h4>`;
+          data.questions.forEach((q, idx) => {
+            html += `<div style="margin-bottom:14px;"><div style="font-weight:600;margin-bottom:6px;">${idx + 1}. ${escapeHtml(q.question_text)}</div>`;
+            ['a', 'b', 'c', 'd'].forEach(letter => {
+              const val = q['option_' + letter];
+              if (!val) return;
+              html += `<div class="fd-quiz-option" id="opt_${q.id}_${letter.toUpperCase()}" onclick="quizModule.selectOption(${q.id}, '${letter.toUpperCase()}')">${letter.toUpperCase()}. ${escapeHtml(val)}</div>`;
+            });
+            html += `</div>`;
+          });
+          html += `<button class="fd-btn" onclick="quizModule.submitAttempt(${quizId})">Submit Quiz</button>`;
+          panel.innerHTML = html;
+        } catch (e) { console.error(e); }
+      },
+
+      selectOption(questionId, letter) {
+        this.currentAnswers[questionId] = letter;
+        ['A', 'B', 'C', 'D'].forEach(l => {
+          const el = document.getElementById(`opt_${questionId}_${l}`);
+          if (el) el.classList.toggle('selected', l === letter);
+        });
+      },
+
+      async submitAttempt(quizId) {
+        const answers = Object.keys(this.currentAnswers || {}).map(qid => ({
+          questionId: parseInt(qid), selectedOption: this.currentAnswers[qid]
+        }));
+        try {
+          const res = await apiFetch(`/quizzes/${quizId}/attempt`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ answers })
+          });
+          const data = await res.json();
+          if (data.success) {
+            const panel = document.getElementById('quizPanel');
+            const strong = (data.details || []).filter(d => d.isCorrect);
+            const weak = (data.details || []).filter(d => !d.isCorrect);
+            let html = `${fdBack('quizPanel', 'quizModule.showList()')}
+              <div class="fd-empty" style="font-size:18px;font-weight:800;color:#4b6cf7;">
+                Total Score: ${data.score} / ${data.totalQuestions}
+              </div>
+              <div style="font-weight:700;margin-top:14px;color:#2e9e5b;">💪 Strongs</div>`;
+
+            html += strong.length
+              ? '<div class="fd-list">' + strong.map((d, idx) => `
+                  <div class="fd-list-item">
+                    <div class="fd-list-item-title">${idx + 1}. ${escapeHtml(d.questionText || '')}</div>
+                    <div class="fd-list-item-sub">Your answer: ${escapeHtml(d.selectedOption || '—')}</div>
+                  </div>`).join('') + '</div>'
+              : '<div class="fd-empty">No strong questions</div>';
+
+            html += `<div style="font-weight:700;margin-top:14px;color:#e5484d;">⚠️ Weaks</div>`;
+            html += weak.length
+              ? '<div class="fd-list">' + weak.map((d, idx) => `
+                  <div class="fd-list-item">
+                    <div class="fd-list-item-title">${idx + 1}. ${escapeHtml(d.questionText || '')}</div>
+                    <div class="fd-list-item-sub">Your answer: ${escapeHtml(d.selectedOption || '—')} | Correct: ${escapeHtml(d.correctOption || '—')}</div>
+                  </div>`).join('') + '</div>'
+              : '<div class="fd-empty">No weak questions</div>';
+
+            panel.innerHTML = html;
+          }
+        } catch (e) { console.error(e); }
+      },
+
+      async showResults(quizId) {
+        const panel = document.getElementById('quizPanel');
+        panel.innerHTML = '<div class="fd-empty">Loading...</div>';
+        try {
+          const res = await apiFetch(`/quizzes/${quizId}/results`);
+          const data = await res.json();
+          let html = `${fdBack('quizPanel', 'quizModule.showResultsPicker()')}
+            <div style="font-weight:800;font-size:18px;">Best Score: ${data.bestScore}</div>
+            <div class="fd-list">`;
+          (data.attempts || []).forEach(a => {
+            html += `<div class="fd-list-item"><div>Score: ${a.score}/${a.total_questions}</div><div class="fd-list-item-sub">${a.attempted_at}</div></div>`;
+          });
+          html += '</div>';
+
+          const perQ = data.perQuestionAnalysis || [];
+          const strong = [], weak = [];
+          perQ.forEach(q => {
+            const attempts = q.attempt_count || 0;
+            const correct = q.correct_count || 0;
+            const pct = attempts > 0 ? (correct / attempts) : 0;
+            (pct >= 0.7 ? strong : weak).push(q);
+          });
+
+          if (perQ.length) {
+            html += `<div style="font-weight:700;margin-top:14px;color:#2e9e5b;">💪 Strongs</div>`;
+            html += strong.length ? '<div class="fd-list">' + strong.map(q => `<div class="fd-list-item"><div class="fd-list-item-title">${escapeHtml(q.question_text)}</div></div>`).join('') + '</div>' : '<div class="fd-empty">No strong questions yet</div>';
+
+            html += `<div style="font-weight:700;margin-top:14px;color:#e5484d;">⚠️ Weaks</div>`;
+            html += weak.length ? '<div class="fd-list">' + weak.map(q => `<div class="fd-list-item"><div class="fd-list-item-title">${escapeHtml(q.question_text)}</div></div>`).join('') + '</div>' : '<div class="fd-empty">No weak questions yet</div>';
+          }
+
+          panel.innerHTML = html;
+        } catch (e) { console.error(e); }
+      },
+
+      async deleteQuiz(quizId) {
+        if (!confirm('Delete this quiz?')) return;
+        try {
+          await apiFetch(`/quizzes/${quizId}`, { method: 'DELETE' });
+          this.showList();
+        } catch (e) { console.error(e); }
+      }
+    };
+    window.quizModule = quizModule;
+
+    function showChangePasswordForm() {
+      const panel = document.getElementById('changePasswordPanel');
+      panel.classList.remove('hidden');
+      panel.innerHTML = `
+        <input class="fd-input" type="password" id="oldPasswordInput" placeholder="Current password">
+        <input class="fd-input" type="password" id="newPasswordInput" placeholder="New password (min 6 characters)">
+        <input class="fd-input" type="password" id="confirmPasswordInput" placeholder="Confirm new password">
+        <button class="fd-btn" onclick="submitChangePassword()">Update Password</button>
+        <div id="changePasswordMsg" style="margin-top:8px;font-size:13px;"></div>`;
+    }
+
+    async function submitChangePassword() {
+      const oldPassword = document.getElementById('oldPasswordInput').value;
+      const newPassword = document.getElementById('newPasswordInput').value;
+      const confirmPassword = document.getElementById('confirmPasswordInput').value;
+      const msg = document.getElementById('changePasswordMsg');
+
+      if (!oldPassword || !newPassword || !confirmPassword) {
+        msg.style.color = 'red'; msg.textContent = 'Please fill in all fields'; return;
+      }
+      if (newPassword !== confirmPassword) {
+        msg.style.color = 'red'; msg.textContent = 'New passwords do not match'; return;
+      }
+
+      try {
+        const res = await apiFetch('/auth/change-password', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ oldPassword, newPassword })
+        });
+        const data = await res.json();
+        msg.style.color = data.success ? 'green' : 'red';
+        msg.textContent = data.message;
+        if (data.success) {
+          document.getElementById('oldPasswordInput').value = '';
+          document.getElementById('newPasswordInput').value = '';
+          document.getElementById('confirmPasswordInput').value = '';
+        }
+      } catch (e) { console.error(e); msg.style.color = 'red'; msg.textContent = 'Could not reach server'; }
+    }
+
+    window.showChangePasswordForm = showChangePasswordForm;
+    window.submitChangePassword = submitChangePassword;
+
+    // ============================================
+    // DASHBOARD INTERACTIVITY
+    // ============================================
+    document.querySelectorAll('.action-pill, .dashboard-preview .stat-item').forEach(el => {
+      el.addEventListener('click', function() {
+        const label = this.innerText.trim().slice(0, 30);
+        console.log(`🧩 interaction: ${label}`);
+      });
+    });
+
+    // ============================================
+    // INIT
+    // ============================================
+    const savedLang = localStorage.getItem('language') || 'en';
+    applyLanguage(savedLang);
+    
+    checkAuth();
+
+  })();
+</script>
+</body>
+</html>
