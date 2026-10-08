@@ -11,3 +11,4 @@ python-docx==1.1.2
 pytesseract==0.3.13
 Pillow==11.3.0
 google-genai
+gunicorn
