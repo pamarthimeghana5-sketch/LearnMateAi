@@ -12,4 +12,5 @@ def get_db_connection():
         database=Config.DB_NAME,
         cursorclass=DictCursor,
         autocommit=False,
+        ssl={"ca": "/etc/ssl/certs/ca-certificates.crt"},
     )
